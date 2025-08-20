@@ -1,6 +1,11 @@
 C:\Projects\project beta\server\productApi\out\productApi.exe
+C:\Projects\project beta\server\productApi\out\out\web.config
 C:\Projects\project beta\server\productApi\out\appsettings.Development.json
 C:\Projects\project beta\server\productApi\out\appsettings.json
+C:\Projects\project beta\server\productApi\out\out\appsettings.Development.json
+C:\Projects\project beta\server\productApi\out\out\appsettings.json
+C:\Projects\project beta\server\productApi\out\out\productApi.deps.json
+C:\Projects\project beta\server\productApi\out\out\productApi.runtimeconfig.json
 C:\Projects\project beta\server\productApi\out\productApi.dll
 C:\Projects\project beta\server\productApi\out\productApi.runtimeconfig.json
 C:\Projects\project beta\server\productApi\out\productApi.pdb
@@ -33,6 +38,8 @@ C:\Projects\project beta\server\productApi\out\Microsoft.IdentityModel.Tokens.dl
 C:\Projects\project beta\server\productApi\out\Microsoft.OpenApi.dll
 C:\Projects\project beta\server\productApi\out\Microsoft.SqlServer.Server.dll
 C:\Projects\project beta\server\productApi\out\Microsoft.Win32.SystemEvents.dll
+C:\Projects\project beta\server\productApi\out\MySqlConnector.dll
+C:\Projects\project beta\server\productApi\out\Pomelo.EntityFrameworkCore.MySql.dll
 C:\Projects\project beta\server\productApi\out\Swashbuckle.AspNetCore.Swagger.dll
 C:\Projects\project beta\server\productApi\out\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Projects\project beta\server\productApi\out\Swashbuckle.AspNetCore.SwaggerUI.dll
