@@ -175,3 +175,13 @@ C:\Projects\project beta\server\productApi\bin\Release\net8.0\out\productApi.dep
 C:\Projects\project beta\server\productApi\bin\Release\net8.0\out\productApi.runtimeconfig.json
 C:\Projects\project beta\server\productApi\bin\Release\net8.0\MySqlConnector.dll
 C:\Projects\project beta\server\productApi\bin\Release\net8.0\Pomelo.EntityFrameworkCore.MySql.dll
+C:\Projects\project beta\server\productApi\bin\Release\net8.0\out\out\web.config
+C:\Projects\project beta\server\productApi\bin\Release\net8.0\out\out\appsettings.Development.json
+C:\Projects\project beta\server\productApi\bin\Release\net8.0\out\out\appsettings.json
+C:\Projects\project beta\server\productApi\bin\Release\net8.0\out\out\productApi.deps.json
+C:\Projects\project beta\server\productApi\bin\Release\net8.0\out\out\productApi.runtimeconfig.json
+C:\Projects\project beta\server\productApi\bin\Release\net8.0\out\out\out\web.config
+C:\Projects\project beta\server\productApi\bin\Release\net8.0\out\out\out\appsettings.Development.json
+C:\Projects\project beta\server\productApi\bin\Release\net8.0\out\out\out\appsettings.json
+C:\Projects\project beta\server\productApi\bin\Release\net8.0\out\out\out\productApi.deps.json
+C:\Projects\project beta\server\productApi\bin\Release\net8.0\out\out\out\productApi.runtimeconfig.json
