@@ -19,7 +19,11 @@ builder.Services.AddControllers()
 
 
 builder.Services.AddDbContext<productDb>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
+    )
+);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
