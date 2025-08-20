@@ -336,3 +336,11 @@ C:\Projects\project beta\server\productAPi\obj\Debug\net8.0\refint\productApi.dl
 C:\Projects\project beta\server\productAPi\obj\Debug\net8.0\productApi.pdb
 C:\Projects\project beta\server\productAPi\obj\Debug\net8.0\productApi.genruntimeconfig.cache
 C:\Projects\project beta\server\productAPi\obj\Debug\net8.0\ref\productApi.dll
+C:\Projects\project beta\server\productApi\obj\Debug\net8.0\productApi.sourcelink.json
+C:\Projects\project beta\server\productApi\bin\Debug\net8.0\out\web.config
+C:\Projects\project beta\server\productApi\bin\Debug\net8.0\out\appsettings.Development.json
+C:\Projects\project beta\server\productApi\bin\Debug\net8.0\out\appsettings.json
+C:\Projects\project beta\server\productApi\bin\Debug\net8.0\out\productApi.deps.json
+C:\Projects\project beta\server\productApi\bin\Debug\net8.0\out\productApi.runtimeconfig.json
+C:\Projects\project beta\server\productApi\bin\Debug\net8.0\MySqlConnector.dll
+C:\Projects\project beta\server\productApi\bin\Debug\net8.0\Pomelo.EntityFrameworkCore.MySql.dll
