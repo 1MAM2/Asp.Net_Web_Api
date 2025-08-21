@@ -185,3 +185,8 @@ C:\Projects\project beta\server\productApi\bin\Release\net8.0\out\out\out\appset
 C:\Projects\project beta\server\productApi\bin\Release\net8.0\out\out\out\appsettings.json
 C:\Projects\project beta\server\productApi\bin\Release\net8.0\out\out\out\productApi.deps.json
 C:\Projects\project beta\server\productApi\bin\Release\net8.0\out\out\out\productApi.runtimeconfig.json
+C:\Projects\project beta\server\productApi\bin\Release\net8.0\out\out\out\out\web.config
+C:\Projects\project beta\server\productApi\bin\Release\net8.0\out\out\out\out\appsettings.Development.json
+C:\Projects\project beta\server\productApi\bin\Release\net8.0\out\out\out\out\appsettings.json
+C:\Projects\project beta\server\productApi\bin\Release\net8.0\out\out\out\out\productApi.deps.json
+C:\Projects\project beta\server\productApi\bin\Release\net8.0\out\out\out\out\productApi.runtimeconfig.json
