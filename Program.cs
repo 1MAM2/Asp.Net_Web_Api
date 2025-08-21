@@ -39,7 +39,13 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy => policy.WithOrigins("https://e-shop-roan-eight.vercel.app") // Vercel URL’in
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+});
 
 var app = builder.Build();
 
@@ -48,19 +54,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll",
-        policy => policy.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
-});
-
-app.UseCors("AllowAll");
-
-
-app.UseAuthorization();
 
 app.UseHttpsRedirection();
+app.UseCors("AllowReactApp");
+
+app.UseAuthorization();
 app.MapControllers();
 app.Run();
