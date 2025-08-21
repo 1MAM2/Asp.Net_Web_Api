@@ -3,48 +3,39 @@ using productApi.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// SQL Server bağlantısı
+// SQL Server / MySQL bağlantısı
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-// Tanımladığımmız proplar aynı değiştirilmeden Frontend taarafına gececek.
-builder.Services.AddControllers()
-.AddJsonOptions(x =>
-x.JsonSerializerOptions.PropertyNamingPolicy = null);
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;
         options.JsonSerializerOptions.NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowNamedFloatingPointLiterals;
         options.JsonSerializerOptions.WriteIndented = true;
     });
 
-
 builder.Services.AddDbContext<productDb>(options =>
     options.UseMySql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
+        connectionString,
+        ServerVersion.AutoDetect(connectionString)
     )
 );
 
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
+// CORS - tek policy içinde hem local hem Vercel domaini
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp", policy =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        policy.WithOrigins(
+            "http://localhost:5173", 
+            "https://e-shop-roan-eight.vercel.app"
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod();
     });
-});
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend",
-        policy => policy.WithOrigins("https://e-shop-roan-eight.vercel.app") // Vercel URL’in
-                        .AllowAnyHeader()
-                        .AllowAnyMethod());
 });
 
 var app = builder.Build();
@@ -56,7 +47,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("AllowReactApp");
+
+// UseCors middleware: mutlaka authorization veya controller mapping'den önce
+app.UseCors("AllowFrontend");
 
 app.UseAuthorization();
 app.MapControllers();
