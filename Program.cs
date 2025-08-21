@@ -29,9 +29,9 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins(
-            "http://localhost:5173", 
-            "https://e-shop-roan-eight.vercel.app"
+         policy.WithOrigins(
+            "https://e-shop-qjj10ool3-mahmut-sami-metindogans-projects.vercel.app",
+            "http://localhost:5173"
         )
         .AllowAnyHeader()
         .AllowAnyMethod();
