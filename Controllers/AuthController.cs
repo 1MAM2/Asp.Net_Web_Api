@@ -20,11 +20,11 @@ namespace productApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly productDb _context;
         private readonly IConfiguration _config;
-        public UserController(productDb context, IConfiguration config)
+        public AuthController(productDb context, IConfiguration config)
         {
             _context = context;
             _config = config;
