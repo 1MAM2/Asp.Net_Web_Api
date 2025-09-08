@@ -67,13 +67,24 @@ namespace productApi.Controllers
 
             return response;
         }
+        [HttpPost("logout")]
+        public async Task<ActionResult> LogoutAsync([FromQuery]int userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) return NotFound();
+            user.RefreshToken = null;
+            user.RefreshTokenExpiryTime = DateTime.MinValue;
+
+            await _context.SaveChangesAsync();
+            return Ok("Logout succes");
+        }
         [HttpPost("refresh-token")]
         public async Task<ActionResult<TokenResponseDTO>> RefreshTokenAsync(RefreshTokenRequestDTO request)
         {
             var user = await ValidateRefreshTokenAsync(request.UserId, request.RefreshToken);
             if (user == null)
             {
-                return Unauthorized("Invalid or expired refresh token") ;
+                return Unauthorized("Invalid or expired refresh token");
             }
             return await CreateTokenResponse(user);
         }
@@ -83,6 +94,7 @@ namespace productApi.Controllers
             {
                 AccessToken = CreateToken(user),
                 RefreshToken = await GenerateAndSaveRefreshTokenAsync(user),
+                UserId = user.Id,
             };
 
         }
