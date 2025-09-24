@@ -31,7 +31,7 @@ namespace productApi.Controllers
             _config = config;
         }
         [HttpPost("register")]
-        public async Task<ActionResult<User>> RegisterAsync(UserDTO request)
+        public async Task<ActionResult<User>> RegisterAsync(UserRegisterDTO request)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == request.UserName);
             if (user != null)
@@ -44,6 +44,8 @@ namespace productApi.Controllers
             newUser.UserName = request.UserName;
             newUser.PasswordHash = hashedPassword.HashPassword(newUser, request.Password);
             newUser.Role = string.IsNullOrWhiteSpace(request.Role) ? "Customer" : request.Role;
+            newUser.Address = request.Address;
+            newUser.Email = request.Email;
 
             _context.Users.Add(newUser);
 
