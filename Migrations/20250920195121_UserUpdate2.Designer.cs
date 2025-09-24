@@ -12,8 +12,8 @@ using productApi.Context;
 namespace productApi.Migrations
 {
     [DbContext(typeof(productDb))]
-    [Migration("20250903183138_addUserV1")]
-    partial class addUserV1
+    [Migration("20250920195121_UserUpdate2")]
+    partial class UserUpdate2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -110,12 +110,22 @@ namespace productApi.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("RefreshToken")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("RefreshTokenExpiryTime")

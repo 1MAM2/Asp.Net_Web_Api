@@ -15,6 +15,7 @@ using Microsoft.VisualBasic;
 using productApi.Context;
 using productApi.DTOS.UserDTOs;
 using productApi.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace productApi.Controllers
 {
@@ -68,7 +69,7 @@ namespace productApi.Controllers
             return response;
         }
         [HttpPost("logout")]
-        public async Task<ActionResult> LogoutAsync([FromQuery]int userId)
+        public async Task<ActionResult> LogoutAsync([FromQuery] int userId)
         {
             var user = await _context.Users.FindAsync(userId);
             if (user == null) return NotFound();
@@ -81,12 +82,24 @@ namespace productApi.Controllers
         [HttpPost("refresh-token")]
         public async Task<ActionResult<TokenResponseDTO>> RefreshTokenAsync(RefreshTokenRequestDTO request)
         {
+            if (string.IsNullOrEmpty(request.RefreshToken))
+            {
+                return Unauthorized("Invalid refresh token");
+            }
+
+
             var user = await ValidateRefreshTokenAsync(request.UserId, request.RefreshToken);
             if (user == null)
             {
                 return Unauthorized("Invalid or expired refresh token");
             }
             return await CreateTokenResponse(user);
+        }
+        [Authorize]
+        [HttpGet("test")]
+        public IActionResult TestSecureEndpoint()
+        {
+            return Ok("Burası güvenli bir endpoint!");
         }
         private async Task<TokenResponseDTO> CreateTokenResponse(User user)
         {
