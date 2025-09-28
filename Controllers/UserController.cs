@@ -14,18 +14,18 @@ using productApi.Models;
 namespace productApi.Controllers
 {
     [ApiController]
-    //[Authorize(Roles ="Customer")]
+    [Authorize(Roles ="Customer")]
     [Route("api/[controller]")]
-    public class UserControler : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly productDb _context;
-        public UserControler(productDb context)
+        public UserController(productDb context)
         {
             _context = context;
         }
 
 
-        [HttpGet("/me")]
+        [HttpGet("me")]
         public async Task<ActionResult<UserReadDTO>> OneUserAllData()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -49,7 +49,7 @@ namespace productApi.Controllers
             }
             return NotFound("User not found");
         }
-        [HttpDelete("/deleteAccount")]
+        [HttpDelete("deleteAccount")]
         public async Task<IActionResult> SoftDeleteAccount(int userId)
         {
             var user = await _context.Users.FindAsync(userId);
