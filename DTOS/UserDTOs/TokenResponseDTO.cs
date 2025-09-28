@@ -7,8 +7,8 @@ namespace productApi.DTOS.UserDTOs
 {
     public class TokenResponseDTO
     {
-        public required string AccessToken { get; set; }
-        public required string RefreshToken { get; set; }
+        public required string accessToken { get; set; }
+        public required string refreshToken { get; set; }
         public int UserId { get; set; }  
     }
 }

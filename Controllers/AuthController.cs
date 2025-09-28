@@ -84,13 +84,13 @@ namespace productApi.Controllers
         [HttpPost("refresh-token")]
         public async Task<ActionResult<TokenResponseDTO>> RefreshTokenAsync(RefreshTokenRequestDTO request)
         {
-            if (string.IsNullOrEmpty(request.RefreshToken))
+            if (string.IsNullOrEmpty(request.refreshToken))
             {
                 return Unauthorized("Invalid refresh token");
             }
 
 
-            var user = await ValidateRefreshTokenAsync(request.UserId, request.RefreshToken);
+            var user = await ValidateRefreshTokenAsync(request.UserId, request.refreshToken);
             if (user == null)
             {
                 return Unauthorized("Invalid or expired refresh token");
@@ -107,8 +107,8 @@ namespace productApi.Controllers
         {
             return new TokenResponseDTO
             {
-                AccessToken = CreateToken(user),
-                RefreshToken = await GenerateAndSaveRefreshTokenAsync(user),
+                accessToken = CreateToken(user),
+                refreshToken = await GenerateAndSaveRefreshTokenAsync(user),
                 UserId = user.Id,
             };
 
