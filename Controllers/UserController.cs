@@ -50,8 +50,13 @@ namespace productApi.Controllers
             return NotFound("User not found");
         }
         [HttpDelete("deleteAccount")]
-        public async Task<IActionResult> SoftDeleteAccount(int userId)
+        public async Task<IActionResult> SoftDeleteAccount()
         {
+            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!int.TryParse(userIdStr, out var userId))
+            {
+                return BadRequest("Invalid user ID");
+            }
             var user = await _context.Users.FindAsync(userId);
             if (user == null) return NotFound("Account not found");
 
