@@ -3703,11 +3703,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Projects\\project beta\\server\\productApi\\productApi.csproj",
+      "projectUniqueName": "C:\\Projects\\project_beta\\server\\productApi\\productApi.csproj",
       "projectName": "productApi",
-      "projectPath": "C:\\Projects\\project beta\\server\\productApi\\productApi.csproj",
+      "projectPath": "C:\\Projects\\project_beta\\server\\productApi\\productApi.csproj",
       "packagesPath": "C:\\Users\\kemol\\.nuget\\packages\\",
-      "outputPath": "C:\\Projects\\project beta\\server\\productApi\\obj\\",
+      "outputPath": "C:\\Projects\\project_beta\\server\\productApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\kemol\\AppData\\Roaming\\NuGet\\NuGet.Config",

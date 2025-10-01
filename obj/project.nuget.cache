@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "u/gd95p+h3k=",
+  "dgSpecHash": "pqd/MnST23w=",
   "success": true,
-  "projectFilePath": "C:\\Projects\\project beta\\server\\productApi\\productApi.csproj",
+  "projectFilePath": "C:\\Projects\\project_beta\\server\\productApi\\productApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\kemol\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\kemol\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.0\\microsoft.aspnetcore.authentication.jwtbearer.8.0.0.nupkg.sha512",

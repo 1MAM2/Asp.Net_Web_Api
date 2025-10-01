@@ -14,7 +14,7 @@ using productApi.Models;
 namespace productApi.Controllers
 {
     [ApiController]
-    [Authorize(Roles ="Customer")]
+    [Authorize(Roles = "Customer")]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
@@ -58,6 +58,26 @@ namespace productApi.Controllers
             user.IsDeleted = true;
             await _context.SaveChangesAsync();
             return Ok();
+        }
+        [HttpPut("updateuser")]
+        public async Task<ActionResult> UpdateAsyncUser(UserUpdateDTO req)
+        {
+            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!int.TryParse(userIdStr, out var userId))
+            {
+                return BadRequest("Invalid user ID");
+            }
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) return NotFound("User not found");
+
+
+            user.UserName = req.UserName;
+            user.Address = req.Address;
+            user.Email = req.Email;
+
+
+            await _context.SaveChangesAsync();
+            return Ok("User update success");
         }
     }
 }
