@@ -71,8 +71,11 @@ namespace productApi.Controllers
             return response;
         }
         [HttpPost("logout")]
-        public async Task<ActionResult> LogoutAsync([FromQuery] int userId)
+        [Authorize(Roles = "Customer")]
+        public async Task<ActionResult> LogoutAsync()
         {
+            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = int.Parse(userIdStr);
             var user = await _context.Users.FindAsync(userId);
             if (user == null) return NotFound();
             user.RefreshToken = null;
