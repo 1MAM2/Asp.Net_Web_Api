@@ -20,6 +20,8 @@ namespace productApi.Context
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<ProductImage> ProductImages => Set<ProductImage>();
         public DbSet<User> Users => Set<User>();
+        public DbSet<Order> Orders => Set<Order>();
+
 
 
 

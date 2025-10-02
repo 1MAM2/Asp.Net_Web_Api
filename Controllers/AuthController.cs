@@ -72,9 +72,10 @@ namespace productApi.Controllers
         }
         [HttpPost("logout")]
         [Authorize(Roles = "Customer")]
-        public async Task<ActionResult> LogoutAsync()
+        public async Task<IActionResult> LogoutAsync()
         {
-            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            
             var userId = int.Parse(userIdStr);
             var user = await _context.Users.FindAsync(userId);
             if (user == null) return NotFound();
