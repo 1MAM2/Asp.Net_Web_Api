@@ -88,7 +88,7 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
             "http://localhost:5173",
-            "https://e-shop-roan-eight.vercel.app/"
+            "https://e-shop-roan-eight.vercel.app"
         )
         .AllowAnyHeader()
         .AllowAnyMethod();
