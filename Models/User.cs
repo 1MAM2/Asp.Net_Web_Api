@@ -15,7 +15,7 @@ namespace productApi.Models
         public string Address { get; set; } = string.Empty;
         public bool IsDeleted { get; set; } = false;
         public bool IsEmailConfirmed { get; set; } = false;
-        public string EmailConfirmationToken { get; set; } = string.Empty;
+        public string? EmailConfirmationToken { get; set; }
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }
     }
