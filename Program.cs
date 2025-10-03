@@ -6,7 +6,15 @@ using productApi.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// SQL Server / MySQL bağlantısı
+//SMTP
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SMTP"));
+
+//email service
+
+builder.Services.AddTransient<IEmailService, EmailService>();
+
+
+//  MySQL bağlantısı
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddControllers()
@@ -80,7 +88,7 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
             "http://localhost:5173",
-            "https://e-shop-roan-eight.vercel.app"
+            "https://e-shop-roan-eight.vercel.app/"
         )
         .AllowAnyHeader()
         .AllowAnyMethod();

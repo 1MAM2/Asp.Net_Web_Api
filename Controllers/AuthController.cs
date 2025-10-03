@@ -25,14 +25,18 @@ namespace productApi.Controllers
     {
         private readonly productDb _context;
         private readonly IConfiguration _config;
-        public AuthController(productDb context, IConfiguration config)
+        private readonly IEmailService _emailService;
+        public AuthController(productDb context, IConfiguration config, IEmailService emailService)
         {
             _context = context;
             _config = config;
+            _emailService = emailService;
         }
         [HttpPost("register")]
         public async Task<ActionResult<User>> RegisterAsync(UserRegisterDTO request)
         {
+            if (await _context.Users.AnyAsync(u => u.Email == request.Email))
+                return BadRequest("Email already exists");
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == request.UserName);
             if (user != null)
             {
@@ -46,10 +50,24 @@ namespace productApi.Controllers
             newUser.Role = string.IsNullOrWhiteSpace(request.Role) ? "Customer" : request.Role;
             newUser.Address = request.Address;
             newUser.Email = request.Email;
+            newUser.EmailConfirmationToken = Guid.NewGuid().ToString();
 
             _context.Users.Add(newUser);
 
             await _context.SaveChangesAsync();
+            // condirmation link
+            var frontendUrl = _config["FrontendUrl"];
+
+            var link = $"{frontendUrl}/confirm-email?token={Uri.EscapeDataString(newUser!.EmailConfirmationToken)}&email={Uri.EscapeDataString(newUser.Email)}";
+
+            //HTML mail şablonu
+            var html = $@"
+            <h3>Hoşgeldiniz!</h3>
+            <p>Hesabınızı doğrulamak için lütfen aşağıdaki linke tıklayın:</p>
+            <a href=""{link}"">E-postayı doğrula</a>
+            <p>Eğer link çalışmazsa bu adresi kopyalayın: {link}</p>";
+
+            await _emailService.SendEmailAsync(newUser.Email,"E-posta Doğrulama",html);
 
             return Ok(new { newUser.UserName });
         }
@@ -75,7 +93,7 @@ namespace productApi.Controllers
         public async Task<IActionResult> LogoutAsync()
         {
             var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            
+
             var userId = int.Parse(userIdStr);
             var user = await _context.Users.FindAsync(userId);
             if (user == null) return NotFound();
@@ -101,11 +119,23 @@ namespace productApi.Controllers
             }
             return await CreateTokenResponse(user);
         }
-        [Authorize]
-        [HttpGet("test")]
-        public IActionResult TestSecureEndpoint()
+        [HttpPost("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(string email, string token)
         {
-            return Ok("Burası güvenli bir endpoint!");
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+            if (user.EmailConfirmationToken != token)
+            {
+                return BadRequest("Invalid token");
+            }
+            user.IsEmailConfirmed = true;
+            user?.EmailConfirmationToken = null;
+
+            await _context.SaveChangesAsync();
+            return Ok("Email confirm is succes");
         }
         private async Task<TokenResponseDTO> CreateTokenResponse(User user)
         {

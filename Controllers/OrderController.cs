@@ -19,7 +19,7 @@ public class OrderController : ControllerBase
     {
         _context = context;
     }
-    [HttpGet("getall-orders")]
+    [HttpGet("user-getall-orders")]
     public async Task<ActionResult<List<OrderReadDTO>>> GetOrderAsync()
     {
         var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier);
