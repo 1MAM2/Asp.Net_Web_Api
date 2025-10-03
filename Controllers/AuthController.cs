@@ -132,7 +132,7 @@ namespace productApi.Controllers
                 return BadRequest("Invalid token");
             }
             user.IsEmailConfirmed = true;
-            user?.EmailConfirmationToken = null;
+            user.EmailConfirmationToken = null;
 
             await _context.SaveChangesAsync();
             return Ok("Email confirm is succes");
