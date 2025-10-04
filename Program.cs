@@ -94,6 +94,18 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next.Invoke();
+    }
+    catch (Exception ex)
+    {
+        context.Response.StatusCode = 500;
+        await context.Response.WriteAsync($"Server error: {ex.Message}");
+    }
+});
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
