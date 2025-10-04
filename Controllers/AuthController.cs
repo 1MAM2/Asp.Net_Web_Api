@@ -27,7 +27,7 @@ namespace productApi.Controllers
         private readonly ILogger<AuthController> _logger;
         private readonly IConfiguration _config;
         private readonly IEmailService _emailService;
-        public AuthController(productDb context, IConfiguration config, IEmailService emailService,  ILogger<AuthController> logger)
+        public AuthController(productDb context, IConfiguration config, IEmailService emailService, ILogger<AuthController> logger)
         {
             _context = context;
             _config = config;
@@ -68,14 +68,18 @@ namespace productApi.Controllers
             <p>Hesabınızı doğrulamak için lütfen aşağıdaki linke tıklayın:</p>
             <a href=""{link}"">E-postayı doğrula</a>
             <p>Eğer link çalışmazsa bu adresi kopyalayın: {link}</p>";
-            try
+            // Bekletme, arka planda gönder
+            _ = Task.Run(async () =>
             {
-                await _emailService.SendEmailAsync(newUser.Email, "E-posta Doğrulama", html);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Email gönderilemedi");
-            }
+                try
+                {
+                    await _emailService.SendEmailAsync(newUser.Email, "E-posta Doğrulama", html);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Email gönderim hatası: {ex.Message}");
+                }
+            });
 
             return Ok(new { newUser.UserName });
         }
