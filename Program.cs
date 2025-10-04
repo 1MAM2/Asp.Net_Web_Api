@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // SMTP
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SMTP"));
 builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddLogging();
 
 // MySQL bağlantısı
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -25,7 +26,6 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "productApi", Version = "v1" });
 
-    // 🔑 JWT Authentication için Swagger ayarı
     c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
         Name = "Authorization",
