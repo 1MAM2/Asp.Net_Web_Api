@@ -20,7 +20,6 @@ using Microsoft.AspNetCore.Authorization;
 namespace productApi.Controllers
 {
     [ApiController]
-    [AllowAnonymous]
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
