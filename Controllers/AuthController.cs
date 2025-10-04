@@ -69,17 +69,16 @@ namespace productApi.Controllers
             <a href=""{link}"">E-postayı doğrula</a>
             <p>Eğer link çalışmazsa bu adresi kopyalayın: {link}</p>";
             // Bekletme, arka planda gönder
-            _ = Task.Run(async () =>
+
+            try
             {
-                try
-                {
-                    await _emailService.SendEmailAsync(newUser.Email, "E-posta Doğrulama", html);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Email gönderim hatası: {ex.Message}");
-                }
-            });
+                await _emailService.SendEmailAsync(newUser.Email, "E-posta Doğrulama", html);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Email gönderim hatası: {ex.Message}");
+            }
+            ;
 
             return Ok(new { newUser.UserName });
         }
