@@ -68,7 +68,7 @@ namespace productApi.Controllers
             <a href=""{link}"">E-postayı doğrula</a>
             <p>Eğer link çalışmazsa bu adresi kopyalayın: {link}</p>";
 
-            await _emailService.SendEmailAsync(newUser.Email,"E-posta Doğrulama",html);
+            await _emailService.SendEmailAsync(newUser.Email, "E-posta Doğrulama", html);
 
             return Ok(new { newUser.UserName });
         }
@@ -139,10 +139,10 @@ namespace productApi.Controllers
             return Ok("Email confirm is succes");
         }
         [HttpGet("protectedRoute")]
-        [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> TestRoute()
+        [Authorize()]
+        public IActionResult TestRoute()
         {
-            return Ok("Test succes");
+            return Ok("Test success");
         }
         private async Task<TokenResponseDTO> CreateTokenResponse(User user)
         {
