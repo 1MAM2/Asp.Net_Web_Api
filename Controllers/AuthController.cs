@@ -66,8 +66,14 @@ namespace productApi.Controllers
             <p>Hesabınızı doğrulamak için lütfen aşağıdaki linke tıklayın:</p>
             <a href=""{link}"">E-postayı doğrula</a>
             <p>Eğer link çalışmazsa bu adresi kopyalayın: {link}</p>";
-
-            await _emailService.SendEmailAsync(newUser.Email, "E-posta Doğrulama", html);
+            try
+            {
+                await _emailService.SendEmailAsync(newUser.Email, "E-posta Doğrulama", html);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Email gönderilemedi");
+            }
 
             return Ok(new { newUser.UserName });
         }
