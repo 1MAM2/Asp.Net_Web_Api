@@ -138,6 +138,12 @@ namespace productApi.Controllers
             await _context.SaveChangesAsync();
             return Ok("Email confirm is succes");
         }
+        [HttpGet("protectedRoute")]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> TestRoute()
+        {
+            return Ok("Test succes");
+        }
         private async Task<TokenResponseDTO> CreateTokenResponse(User user)
         {
             return new TokenResponseDTO
