@@ -80,10 +80,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins(
-            "http://localhost:5173",
-            "https://e-shop-roan-eight.vercel.app"
-        )
+        policy.AllowAnyOrigins()
         .AllowAnyHeader()
         .AllowAnyMethod();
         // .AllowCredentials(); // eğer cookie/token taşıyorsan ekle
