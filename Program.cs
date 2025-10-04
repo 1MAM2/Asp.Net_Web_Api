@@ -79,15 +79,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
-    {
-        policy.WithOrigins(
-            "http://localhost:5173","https://e-shop-roan-eight.vercel.app/"
-        )
-    
-        .AllowAnyHeader()
-        .AllowAnyMethod();
-        // .AllowCredentials(); // eğer cookie/token taşıyorsan ekle
-    });
+{
+    policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+});
 });
 
 var app = builder.Build();
@@ -99,12 +93,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-// CORS → authentication’dan önce
 app.UseCors("AllowFrontend");
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 app.Run();
