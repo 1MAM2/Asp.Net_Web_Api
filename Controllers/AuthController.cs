@@ -60,7 +60,7 @@ namespace productApi.Controllers
             // condirmation link
             var frontendUrl = _config["FrontendUrl"];
 
-            var link = $"{frontendUrl}/confirm-email?token={Uri.EscapeDataString(newUser!.EmailConfirmationToken)}&email={Uri.EscapeDataString(newUser.Email)}";
+            var link = $"{frontendUrl}confirm-email?token={Uri.EscapeDataString(newUser!.EmailConfirmationToken)}&email={Uri.EscapeDataString(newUser.Email)}";
 
             //HTML mail şablonu
             var html = $@"
