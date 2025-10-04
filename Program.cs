@@ -6,15 +6,11 @@ using productApi.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//SMTP
+// SMTP
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SMTP"));
-
-//email service
-
 builder.Services.AddTransient<IEmailService, EmailService>();
 
-
-//  MySQL bağlantısı
+// MySQL bağlantısı
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddControllers()
@@ -24,6 +20,7 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowNamedFloatingPointLiterals;
         options.JsonSerializerOptions.WriteIndented = true;
     });
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "productApi", Version = "v1" });
@@ -78,10 +75,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     };
 });
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-// CORS - tek policy içinde hem local hem Vercel domaini
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
@@ -92,6 +86,7 @@ builder.Services.AddCors(options =>
         )
         .AllowAnyHeader()
         .AllowAnyMethod();
+        // .AllowCredentials(); // eğer cookie/token taşıyorsan ekle
     });
 });
 
@@ -105,9 +100,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// UseCors middleware: mutlaka authorization veya controller mapping'den önce
+// CORS → authentication’dan önce
 app.UseCors("AllowFrontend");
 
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 app.Run();

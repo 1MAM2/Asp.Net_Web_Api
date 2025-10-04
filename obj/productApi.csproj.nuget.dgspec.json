@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Projects\\project_beta\\server\\productApi\\productApi.csproj": {}
+    "C:\\Projects\\project_beta\\server\\productAPi\\productApi.csproj": {}
   },
   "projects": {
-    "C:\\Projects\\project_beta\\server\\productApi\\productApi.csproj": {
+    "C:\\Projects\\project_beta\\server\\productAPi\\productApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Projects\\project_beta\\server\\productApi\\productApi.csproj",
+        "projectUniqueName": "C:\\Projects\\project_beta\\server\\productAPi\\productApi.csproj",
         "projectName": "productApi",
-        "projectPath": "C:\\Projects\\project_beta\\server\\productApi\\productApi.csproj",
+        "projectPath": "C:\\Projects\\project_beta\\server\\productAPi\\productApi.csproj",
         "packagesPath": "C:\\Users\\kemol\\.nuget\\packages\\",
-        "outputPath": "C:\\Projects\\project_beta\\server\\productApi\\obj\\",
+        "outputPath": "C:\\Projects\\project_beta\\server\\productAPi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\kemol\\AppData\\Roaming\\NuGet\\NuGet.Config",
