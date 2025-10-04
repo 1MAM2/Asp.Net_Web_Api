@@ -24,10 +24,10 @@ namespace productApi.Controllers
     public class AuthController : ControllerBase
     {
         private readonly productDb _context;
-        private readonly ILogger _logger;
+        private readonly ILogger<AuthController> _logger;
         private readonly IConfiguration _config;
         private readonly IEmailService _emailService;
-        public AuthController(productDb context, IConfiguration config, IEmailService emailService, ILogger logger)
+        public AuthController(productDb context, IConfiguration config, IEmailService emailService,  ILogger<AuthController> logger)
         {
             _context = context;
             _config = config;
