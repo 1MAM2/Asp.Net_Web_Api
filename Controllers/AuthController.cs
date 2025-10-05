@@ -26,12 +26,11 @@ namespace productApi.Controllers
         private readonly productDb _context;
         private readonly ILogger<AuthController> _logger;
         private readonly IConfiguration _config;
-        private readonly IEmailService _emailService;
-        public AuthController(productDb context, IConfiguration config, IEmailService emailService, ILogger<AuthController> logger)
+        // private readonly IEmailService _emailService;
+        public AuthController(productDb context, IConfiguration config, ILogger<AuthController> logger)
         {
             _context = context;
             _config = config;
-            _emailService = emailService;
             _logger = logger;
         }
         [HttpPost("register")]
