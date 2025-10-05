@@ -1,49 +1,40 @@
-
-using MailKit.Security;
-using Microsoft.Extensions.Options;
-using MimeKit;
-using MailKit.Net.Smtp;
-
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 public class EmailService : IEmailService
 {
-
-    private readonly SmtpSettings _smtp;
+    private readonly IConfiguration _config;
     private readonly ILogger<EmailService> _logger;
-    public EmailService(IOptions<SmtpSettings> smtpOptions, ILogger<EmailService> logger)
+
+    public EmailService(IConfiguration config, ILogger<EmailService> logger)
     {
-        _smtp = smtpOptions.Value;
+        _config = config;
         _logger = logger;
     }
+
     public async Task SendEmailAsync(string to, string subject, string htmlMessage)
     {
-        var email = new MimeMessage();
-        email.From.Add(new MailboxAddress(_smtp.FromName ?? "", _smtp.FromEmail));
-        email.To.Add(MailboxAddress.Parse(to));
-        email.Subject = subject;
+        var apiKey = _config["SENDGRID_API_KEY"];
+        var client = new SendGridClient(apiKey);
 
-        var builder = new BodyBuilder { HtmlBody = htmlMessage };
-        email.Body = builder.ToMessageBody();
-        using var client = new SmtpClient();
+        var from = new EmailAddress(_config["SENDGRID_FROM_EMAIL"], _config["SENDGRID_FROM_NAME"]);
+        var toEmail = new EmailAddress(to);
+        var msg = MailHelper.CreateSingleEmail(from, toEmail, subject, plainTextContent: null, htmlContent: htmlMessage);
 
         try
         {
-            var secureOption = _smtp.UseSsl ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.StartTls;
-            await client.ConnectAsync(_smtp.Host, _smtp.Port, secureOption);
-
-            if (!string.IsNullOrWhiteSpace(_smtp.User))
+            var response = await client.SendEmailAsync(msg);
+            if (response.StatusCode != System.Net.HttpStatusCode.Accepted &&
+                response.StatusCode != System.Net.HttpStatusCode.OK)
             {
-                await client.AuthenticateAsync(_smtp.User, _smtp.Password);
+                var body = await response.Body.ReadAsStringAsync();
+                _logger.LogError("SendGrid error: {StatusCode} - {Body}", response.StatusCode, body);
             }
-            await client.SendAsync(email);
-            await client.DisconnectAsync(true);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error accured : {Message}", ex.Message);
+            _logger.LogError(ex, "SendGrid exception: {Message}", ex.Message);
             throw;
         }
-        _logger.LogInformation("SMTP Settings: Host={Host}, User={User}", _smtp.Host, _smtp.User);
-
     }
 }
