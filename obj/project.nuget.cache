@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "iADvFN7wnnw=",
+  "dgSpecHash": "qAJqH8ggWcY=",
   "success": true,
-  "projectFilePath": "C:\\Projects\\project_beta\\server\\productAPi\\productApi.csproj",
+  "projectFilePath": "C:\\Projects\\project_beta\\server\\productApi\\productApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\kemol\\.nuget\\packages\\bouncycastle.cryptography\\2.6.1\\bouncycastle.cryptography.2.6.1.nupkg.sha512",
     "C:\\Users\\kemol\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

@@ -68,7 +68,6 @@ namespace productApi.Controllers
             <p>Hesabınızı doğrulamak için lütfen aşağıdaki linke tıklayın:</p>
             <a href=""{link}"">E-postayı doğrula</a>
             <p>Eğer link çalışmazsa bu adresi kopyalayın: {link}</p>";
-            // Bekletme, arka planda gönder
 
             try
             {

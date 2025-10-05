@@ -24,7 +24,6 @@ public class EmailService : IEmailService
 
         var builder = new BodyBuilder { HtmlBody = htmlMessage };
         email.Body = builder.ToMessageBody();
-
         using var client = new SmtpClient();
 
         try
@@ -44,5 +43,7 @@ public class EmailService : IEmailService
             _logger.LogError(ex, "An error accured : {Message}", ex.Message);
             throw;
         }
+        _logger.LogInformation("SMTP Settings: Host={Host}, User={User}", _smtp.Host, _smtp.User);
+
     }
 }
