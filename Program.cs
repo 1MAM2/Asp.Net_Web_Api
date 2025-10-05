@@ -7,8 +7,8 @@ using productApi.Context;
 var builder = WebApplication.CreateBuilder(args);
 
 // SMTP
-builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SMTP"));
-builder.Services.AddTransient<IEmailService, EmailService>();
+// builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SMTP"));
+// builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddLogging();
 
 // MySQL bağlantısı
