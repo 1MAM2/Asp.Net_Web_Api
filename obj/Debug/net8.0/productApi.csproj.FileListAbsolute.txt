@@ -512,3 +512,6 @@ C:\Projects\project_beta\server\productApi\bin\Debug\net8.0\MailKit.dll
 C:\Projects\project_beta\server\productApi\bin\Debug\net8.0\MimeKit.dll
 C:\Projects\project_beta\server\productApi\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll
 C:\Projects\project_beta\server\productApi\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll
+C:\Projects\project_beta\server\productApi\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Projects\project_beta\server\productApi\bin\Debug\net8.0\SendGrid.dll
+C:\Projects\project_beta\server\productApi\bin\Debug\net8.0\StarkbankEcdsa.dll

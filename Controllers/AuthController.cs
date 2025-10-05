@@ -61,17 +61,18 @@ namespace productApi.Controllers
             var frontendUrl = _config["FrontendUrl"];
 
             var link = $"{frontendUrl}confirm-email?token={Uri.EscapeDataString(newUser!.EmailConfirmationToken)}&email={Uri.EscapeDataString(newUser.Email)}";
+            
 
             //HTML mail şablonu
             var html = $@"
-            <h3>Hoşgeldiniz!</h3>
-            <p>Hesabınızı doğrulamak için lütfen aşağıdaki linke tıklayın:</p>
-            <a href=""{link}"">E-postayı doğrula</a>
-            <p>Eğer link çalışmazsa bu adresi kopyalayın: {link}</p>";
+            <h3>Welcome!</h3>
+            <p>To verify your account, click the link below:</p>
+            <a href=""{link}"">Verify Email</a>
+            <p>If the link doesn’t work, copy this address: {link}</p>";
 
             try
             {
-                await _emailService.SendEmailAsync(newUser.Email, "E-posta Doğrulama", html);
+                await _emailService.SendEmailAsync(newUser.Email, "Email Verification", html);
             }
             catch (Exception ex)
             {
