@@ -57,28 +57,30 @@ namespace productApi.Controllers
             _context.Users.Add(newUser);
 
             await _context.SaveChangesAsync();
-            // condirmation link
-            var frontendUrl = _config["FrontendUrl"];
+            // // condirmation link
+            // var frontendUrl = _config["FrontendUrl"];
 
-            var link = $"{frontendUrl}confirm-email?token={Uri.EscapeDataString(newUser!.EmailConfirmationToken)}&email={Uri.EscapeDataString(newUser.Email)}";
-            
+            // var link = $"{frontendUrl}confirm-email?token={Uri.EscapeDataString(newUser!.EmailConfirmationToken)}&email={Uri.EscapeDataString(newUser.Email)}";
 
-            //HTML mail şablonu
-            var html = $@"
-            <h3>Welcome!</h3>
-            <p>To verify your account, click the link below:</p>
-            <a href=""{link}"">Verify Email</a>
-            <p>If the link doesn’t work, copy this address: {link}</p>";
 
-            try
-            {
-                await _emailService.SendEmailAsync(newUser.Email, "Email Verification", html);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Email gönderim hatası: {ex.Message}");
-            }
-            ;
+            // //HTML mail şablonu
+            // var html = $@"
+            // <h3>Welcome!</h3>
+            // <p>To verify your account, click the link below:</p>
+            // <a href=""{link}"">Verify Email</a>
+            // <p>If the link doesn’t work, copy this address: {link}</p>";
+
+            // try
+            // {
+            //     await _emailService.SendEmailAsync(newUser.Email, "Email Verification", html);
+            // }
+            // catch (Exception ex)
+            // {
+            //     Console.WriteLine($"Email gönderim hatası: {ex.Message}");
+            // }
+            // ;
+            // var key = _config["SendGrid:ApiKey"];
+            // Console.WriteLine(key != null ? "Key bulundu" : "Key null"); sonra
 
             return Ok(new { newUser.UserName });
         }
