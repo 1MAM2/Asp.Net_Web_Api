@@ -12,29 +12,31 @@ public class EmailService : IEmailService
         _logger = logger;
     }
 
-    public async Task SendEmailAsync(string to, string subject, string htmlMessage)
+    public class EmailService : IEmailService
     {
-        var apiKey = _config["SENDGRID_API_KEY"];
-        var client = new SendGridClient(apiKey);
+        private readonly string _sendGridApiKey;
+        private readonly ILogger<EmailService> _logger;
 
-        var from = new EmailAddress(_config["SENDGRID_FROM_EMAIL"], _config["SENDGRID_FROM_NAME"]);
-        var toEmail = new EmailAddress(to);
-        var msg = MailHelper.CreateSingleEmail(from, toEmail, subject, plainTextContent: null, htmlContent: htmlMessage);
-
-        try
+        public EmailService(IConfiguration config, ILogger<EmailService> logger)
         {
+            _sendGridApiKey = config["SendGrid:ApiKey"] ?? throw new ArgumentNullException("SendGrid API Key not found");
+            _logger = logger;
+        }
+
+        public async Task SendEmailAsync(string to, string subject, string htmlMessage)
+        {
+            var client = new SendGrid.SendGridClient(_sendGridApiKey);
+            var from = new EmailAddress("smetindogan@gmail.com", "EShop.com"); // Gmail adresin
+            var toAddress = new EmailAddress(to);
+            var msg = MailHelper.CreateSingleEmail(from, toAddress, subject, null, htmlMessage);
+
             var response = await client.SendEmailAsync(msg);
-            if (response.StatusCode != System.Net.HttpStatusCode.Accepted &&
-                response.StatusCode != System.Net.HttpStatusCode.OK)
+
+            if (!response.IsSuccessStatusCode)
             {
                 var body = await response.Body.ReadAsStringAsync();
-                _logger.LogError("SendGrid error: {StatusCode} - {Body}", response.StatusCode, body);
+                _logger.LogError("SendGrid error: {Body}", body);
             }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "SendGrid exception: {Message}", ex.Message);
-            throw;
         }
     }
 }
