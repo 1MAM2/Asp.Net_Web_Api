@@ -507,3 +507,5 @@ C:\Projects\project_beta\server\productApi\obj\Debug\net8.0\rjsmrazor.dswa.cache
 C:\Projects\project_beta\server\productApi\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
 C:\Projects\project_beta\server\productApi\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Projects\project_beta\server\productApi\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+C:\Projects\project_beta\server\productApi\bin\Debug\net8.0\Iyzipay.dll
+C:\Projects\project_beta\server\productApi\bin\Debug\net8.0\Newtonsoft.Json.dll

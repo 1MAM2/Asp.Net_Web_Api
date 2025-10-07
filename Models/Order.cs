@@ -1,11 +1,14 @@
 using System;
 using System.Security.Cryptography;
+using productApi.Models;
 
 public class Order
 {
     public int Id { get; set; } // 6 haneli int ID
     public int UserId { get; set; }
+    public User User { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? PaymentDate { get; set; } = null;
     public decimal TotalPrice { get; set; }
 
     public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
@@ -35,9 +38,10 @@ public class Order
     public enum OrderStatus
     {
         Cancelled = 0,    // İptal edildi
-        Pending = 1,     // Sipariş alındı ama işleme başlanmadı
-        Processing = 2,  // Hazırlanıyor
-        Shipped = 3,     // Kargoya verildi
-        Delivered = 4,   // Teslim edildi
+        Paid = 1, 
+        Pending = 2,     // Sipariş alındı ama işleme başlanmadı
+        Processing = 3,  // Hazırlanıyor
+        Shipped = 4,     // Kargoya verildi
+        Delivered = 5,   // Teslim edildi
     }
 }

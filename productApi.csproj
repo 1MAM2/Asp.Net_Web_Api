@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <!-- <PackageReference Include="MailKit" Version="4.14.0" /> -->
+    <PackageReference Include="Iyzipay" Version="2.1.67" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.6" /> 
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.6">

@@ -3,8 +3,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using productApi.Context;
+using productApi.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//signalR
+builder.Services.AddSignalR();
 
 // SMTP
 // builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SMTP"));
@@ -112,4 +116,5 @@ app.Use(async (context, next) =>
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHub<PayHub>("/pay-hub");
 app.Run();
