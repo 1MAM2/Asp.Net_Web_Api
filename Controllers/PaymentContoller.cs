@@ -30,10 +30,10 @@ namespace productApi.Controllers
             _context = context;
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        [HttpGet("pay")]
+        [HttpPost("pay")]
         public async Task<IActionResult> Pay([FromBody] PaymentRequestDTO req)
         {
-            var order = _context.Orders.FirstOrDefault(o => o.Id == int.Parse(req.TransactionId));
+           var order = _context.Orders.FirstOrDefault(o => o.Id.ToString() == req.TransactionId);
             if (order == null) return NotFound("Order not found");
             Options options = new Options()
             {

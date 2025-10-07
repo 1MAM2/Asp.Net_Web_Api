@@ -92,7 +92,14 @@ public class OrderController : ControllerBase
             }).ToList()
         };
 
-        return Ok(orderReadDTO);
+        return Ok(new
+        {
+            OrderId = order.Id,
+            order.TotalPrice,
+            order.Status,
+            order.UserId,
+            order.CreatedAt
+        });
     }
     [HttpGet("{id}")]
     public async Task<ActionResult<OrderReadDTO>> GetOrderById(int id)
