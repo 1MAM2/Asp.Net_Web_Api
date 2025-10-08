@@ -67,12 +67,13 @@ namespace productApi.Controllers
             return Ok(new { newUser.UserName });
         }
 
+        [HttpGet("sendmail")]
         public async Task SendVeryMailAsync(User user)
         {
             IResend resend = ResendClient.Create("re_3gKy9BkJ_Defxc4aNFVKeuGiCBh4A2SNF");
             var token = user.EmailConfirmationToken;
             var encodedToken = Uri.EscapeDataString(token!);
-            string verifyUrl = $"https://e-shop-roan-eight.vercel.app/verify-email/token={encodedToken}";
+            string verifyUrl = $"https://e-shop-roan-eight.vercel.app/verify-email/{encodedToken}";
 
             var resp = await resend.EmailSendAsync(new EmailMessage()
             {
@@ -89,25 +90,35 @@ namespace productApi.Controllers
             });
         }
 
-        [HttpGet("verify-email/{token}")]
+        [HttpGet("verify-email")]
         public async Task<ActionResult> ConfirmMail([FromQuery] string token)
         {
-            if (string.IsNullOrEmpty(token))
-                return BadRequest("Token bulunamadı.");
+            try
+            {
+                if (string.IsNullOrEmpty(token))
+                    return BadRequest("Token bulunamadı.");
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.EmailConfirmationToken == token);
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.EmailConfirmationToken == token);
+                Console.WriteLine("Metotdan gelennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn" + token, "Db den gelen" + user.EmailConfirmationToken);
 
-            if (user == null) return NotFound("Geçersiz veya süresi dolmuş token.");
+                if (user == null) return NotFound("Geçersiz veya süresi dolmuş token.");
 
-            if (user.IsEmailConfirmed) return Ok("E-posta zaten doğrulanmış.");
+                if (user.IsEmailConfirmed) return Ok("E-posta zaten doğrulanmış.");
 
-            user.IsEmailConfirmed = true;
-            user.EmailConfirmationToken = null; // Token'ı sıfırlıyoruz
-            await _context.SaveChangesAsync();
+                user.IsEmailConfirmed = true;
+                user.EmailConfirmationToken = null; // Token'ı sıfırlıyoruz
+                await _context.SaveChangesAsync();
 
-            // Burada kullanıcıyı frontend'e yönlendirebilirsin
-            // örneğin doğrulama başarılı sayfasına:
-            return Redirect("https://e-shop-roan-eight.vercel.app/email-verified-success");
+                // Burada kullanıcıyı frontend'e yönlendirebilirsin
+                // örneğin doğrulama başarılı sayfasına:
+                return Redirect("https://e-shop-roan-eight.vercel.app/email-verified-success");
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
+
         }
 
 

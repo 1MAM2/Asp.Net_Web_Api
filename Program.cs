@@ -77,15 +77,26 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 });
 
 // CORS
+// builder.Services.AddCors(options =>
+// {
+//     options.AddPolicy("AllowFrontend", policy =>
+// {
+//     policy.WithOrigins(
+//             "https://e-shop-roan-eight.vercel.app",
+//             "http://localhost:5173"
+//         ).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+// });
+// });
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend", policy =>
-{
-    policy.WithOrigins(
-            "https://e-shop-roan-eight.vercel.app",
-            "http://localhost:5173"
-        ).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
-});
+    options.AddPolicy("AllowAll",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
 });
 
 var app = builder.Build();
