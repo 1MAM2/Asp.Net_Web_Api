@@ -95,7 +95,7 @@ namespace productApi.Controllers
         // [HttpGet("verify-email")]
         // public async Task<ActionResult> ConfirmMail([FromQuery] string token)
         [HttpGet("verify-email/{token}")]
-public async Task<ActionResult> ConfirmMail([FromRoute] string token)
+        public async Task<ActionResult> ConfirmMail([FromRoute] string token)
         {
             try
             {
