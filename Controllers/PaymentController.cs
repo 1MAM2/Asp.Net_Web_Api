@@ -58,7 +58,7 @@ namespace productApi.Controllers
                     Installment = 1,
                     PaymentChannel = PaymentChannel.WEB.ToString(),
                     PaymentGroup = PaymentGroup.PRODUCT.ToString(),
-                    CallbackUrl = "http://localhost:5039/api/Payment/pay-callback"
+                    CallbackUrl = "https://asp-net-web-api-ym61.onrender.com/api/Payment/pay-callback"
                 };
                 PaymentCard paymentCard = new PaymentCard();
                 paymentCard.CardHolderName = "John Doe";
