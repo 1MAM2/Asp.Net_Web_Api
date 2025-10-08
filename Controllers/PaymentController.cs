@@ -34,13 +34,27 @@ namespace productApi.Controllers
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         [HttpPost("pay/{transactionId}")]
-        public async Task<IActionResult> Pay([FromRoute] PaymentRequestDTO req)
+        public async Task<IActionResult> Pay([FromRoute] string transactionId)
         {
             var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
             try
             {
-                var order = _context.Orders.FirstOrDefault(o => o.Id.ToString() == req.TransactionId);
-                if (order == null) return NotFound("Order not found");
+                if (string.IsNullOrEmpty(transactionId))
+                    return BadRequest("TransactionId is required");
+
+                var order = await _context.Orders
+                    .Include(o => o.User)
+                    .Include(o => o.OrderItems)
+                        .ThenInclude(oi => oi.Product)
+                    .FirstOrDefaultAsync(o => o.Id.ToString() == transactionId);
+
+                if (order == null)
+                    return NotFound("Order not found");
+
+                if (order.User == null)
+                    return BadRequest("User not found for order");
+
+
                 Options options = new Options()
                 {
                     ApiKey = "sandbox-bICJ3E6VTMfSXNFHUpBCXlbNCumDgxBc",
@@ -111,7 +125,7 @@ namespace productApi.Controllers
                 var orderWithItems = await _context.Orders
                     .Include(o => o.OrderItems)
                         .ThenInclude(oi => oi.Product) // Product bilgilerini de yükle
-                    .FirstOrDefaultAsync(o => o.Id.ToString() == req.TransactionId);
+                    .FirstOrDefaultAsync(o => o.Id.ToString() == transactionId);
 
 
                 var basketItems = orderWithItems!.OrderItems.Select((item, index) => new BasketItem
@@ -126,15 +140,16 @@ namespace productApi.Controllers
                 }).ToList();
                 request.BasketItems = basketItems;
 
+
                 // Payment payment = await Payment.Create(request, options); 3d siz ödeme başlatıyor
                 ThreedsInitialize threedsInitialize = await ThreedsInitialize.Create(request, options);
                 return Ok(new { Content = threedsInitialize.HtmlContent, ConversationId = request.ConversationId });
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Hata mesajı:" + ex);
+                Console.WriteLine("Hata: " + ex); // Konsola tam stack trace yazar
+                return StatusCode(500, new { error = ex.Message });
             }
-            return Ok();
         }
         [HttpPost("pay-callback")]
         public async Task<IActionResult> PayCallBack([FromForm] IFormCollection collections)
