@@ -509,3 +509,6 @@ C:\Projects\project_beta\server\productApi\obj\Debug\net8.0\staticwebassets.buil
 C:\Projects\project_beta\server\productApi\obj\Debug\net8.0\staticwebassets.build.endpoints.json
 C:\Projects\project_beta\server\productApi\bin\Debug\net8.0\Iyzipay.dll
 C:\Projects\project_beta\server\productApi\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Projects\project_beta\server\productApi\bin\Debug\net8.0\Microsoft.AspNetCore.WebUtilities.dll
+C:\Projects\project_beta\server\productApi\bin\Debug\net8.0\Microsoft.Net.Http.Headers.dll
+C:\Projects\project_beta\server\productApi\bin\Debug\net8.0\Resend.dll
