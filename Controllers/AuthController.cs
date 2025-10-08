@@ -39,7 +39,7 @@ namespace productApi.Controllers
             _logger = logger;
         }
         [HttpPost("register")]
-        public async Task<IActionResult<User>> RegisterAsync(UserRegisterDTO request)
+        public async Task<ActionResult<User>> RegisterAsync(UserRegisterDTO request)
         {
             if (await _context.Users.AnyAsync(u => u.Email == request.Email))
                 return BadRequest("Email already exists");
@@ -72,7 +72,7 @@ namespace productApi.Controllers
             IResend resend = ResendClient.Create("re_3gKy9BkJ_Defxc4aNFVKeuGiCBh4A2SNF");
             var token = user.EmailConfirmationToken;
             var encodedToken = Uri.EscapeDataString(token!);
-            string verifyUrl = $"https://e-shop-roan-eight.vercel.app/verify-email?token={encodedToken}";
+            string verifyUrl = $"https://e-shop-roan-eight.vercel.app/verify-email/token={encodedToken}";
 
             var resp = await resend.EmailSendAsync(new EmailMessage()
             {
