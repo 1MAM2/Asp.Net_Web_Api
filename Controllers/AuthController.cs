@@ -73,6 +73,7 @@ namespace productApi.Controllers
             IResend resend = ResendClient.Create("re_3gKy9BkJ_Defxc4aNFVKeuGiCBh4A2SNF");
             var token = user.EmailConfirmationToken;
             var encodedToken = Uri.EscapeDataString(token!);
+            string encodedToken = WebUtility.UrlEncode(token);
             string verifyUrl = $"https://e-shop-roan-eight.vercel.app/verify-email/{encodedToken}";
             // Gerçek kullanıcılara e-posta göndermek istiyorsan önce Resend’de bir domain (örneğin myshop.com) doğrulaman gerekiyor.
             //Ardından From adresini "MyShop <noreply@myshop.com>" gibi yaparsan artık resend.dev kısıtlaması kalkar ve istediğin adrese mail atabilirsin.
