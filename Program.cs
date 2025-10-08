@@ -108,7 +108,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("AllowFrontend");
+// app.UseCors("AllowFrontend");
+app.UseCors("AllowAll");
 app.Use(async (context, next) =>
 {
     try
