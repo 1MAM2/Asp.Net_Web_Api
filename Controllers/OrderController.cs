@@ -92,7 +92,7 @@ public class OrderController : ControllerBase
             }).ToList()
         };
 
-        return Ok(new
+        return new JsonResult(new
         {
             OrderId = order.Id,
             order.TotalPrice,
@@ -100,6 +100,7 @@ public class OrderController : ControllerBase
             order.UserId,
             order.CreatedAt
         });
+
     }
     [HttpGet("{id}")]
     public async Task<ActionResult<OrderReadDTO>> GetOrderById(int id)
