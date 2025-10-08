@@ -76,7 +76,7 @@ namespace productApi.Controllers
 
             var resp = await resend.EmailSendAsync(new EmailMessage()
             {
-                From = "",
+                From = "Acme <onboarding@resend.dev>",
                 To = user.Email,
                 Subject = "MailConfirm",
                 HtmlBody = $@"
