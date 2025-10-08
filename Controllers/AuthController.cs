@@ -74,19 +74,21 @@ namespace productApi.Controllers
             var token = user.EmailConfirmationToken;
             var encodedToken = Uri.EscapeDataString(token!);
             string verifyUrl = $"https://e-shop-roan-eight.vercel.app/verify-email/{encodedToken}";
-
+            // Gerçek kullanıcılara e-posta göndermek istiyorsan önce Resend’de bir domain (örneğin myshop.com) doğrulaman gerekiyor.
+            //Ardından From adresini "MyShop <noreply@myshop.com>" gibi yaparsan artık resend.dev kısıtlaması kalkar ve istediğin adrese mail atabilirsin.
             var resp = await resend.EmailSendAsync(new EmailMessage()
             {
                 From = "Acme <onboarding@resend.dev>",
                 To = user.Email,
                 Subject = "MailConfirm",
                 HtmlBody = $@"
-            <h2>Hoş geldin {user.UserName}!</h2>
-            <p>Hesabını doğrulamak için aşağıdaki linke tıkla 👇</p>
-            <a href='{verifyUrl}'
-               style='background:#4CAF50;color:white;padding:10px 20px;border-radius:5px;text-decoration:none;'>
-               E-postamı Doğrula
-            </a>",
+             <h2>Welcome, {user.UserName}!</h2>
+        <p>Please confirm your account by clicking the button below 👇</p>
+        <a href='{verifyUrl}'
+           style='background:#4CAF50;color:white;padding:10px 20px;border-radius:5px;text-decoration:none;display:inline-block;'>
+           Verify My Email
+        </a>
+        <p style='margin-top:15px;font-size:13px;color:#666;'>If you didn’t create an account, you can safely ignore this email.</p>",
             });
         }
 
@@ -96,27 +98,27 @@ namespace productApi.Controllers
             try
             {
                 if (string.IsNullOrEmpty(token))
-                    return BadRequest("Token bulunamadı.");
+                    return BadRequest("token not found.");
 
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.EmailConfirmationToken == token);
-                Console.WriteLine("Metotdan gelennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn" + token, "Db den gelen" + user.EmailConfirmationToken);
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.EmailConfirmationToken != null && u.EmailConfirmationToken == token);
 
-                if (user == null) return NotFound("Geçersiz veya süresi dolmuş token.");
+                if (user == null) return NotFound("Invalid or expired  token.");
 
-                if (user.IsEmailConfirmed) return Ok("E-posta zaten doğrulanmış.");
+                if (user.IsEmailConfirmed) return Ok("Mail already confirmed.");
 
                 user.IsEmailConfirmed = true;
-                user.EmailConfirmationToken = null; // Token'ı sıfırlıyoruz
+                user.EmailConfirmationToken = null;
                 await _context.SaveChangesAsync();
 
-                // Burada kullanıcıyı frontend'e yönlendirebilirsin
-                // örneğin doğrulama başarılı sayfasına:
-                return Redirect("https://e-shop-roan-eight.vercel.app/email-verified-success");
+
+                return Ok("E-posta doğrulandı!");
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                Console.WriteLine($"Doğrulama hatası: {ex.Message}");
+                return StatusCode(500, $"Server error: {ex.Message}");
             }
 
         }
