@@ -10,9 +10,6 @@ var builder = WebApplication.CreateBuilder(args);
 //signalR
 builder.Services.AddSignalR();
 
-// SMTP
-// builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SMTP"));
-// builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddLogging();
 
 // MySQL bağlantısı

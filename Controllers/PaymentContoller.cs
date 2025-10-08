@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using productApi.Context;
 using productApi.Hubs;
+using System.Globalization;
+using Newtonsoft.Json;
 
 namespace productApi.Controllers
 {
@@ -33,7 +35,7 @@ namespace productApi.Controllers
         [HttpPost("pay")]
         public async Task<IActionResult> Pay([FromBody] PaymentRequestDTO req)
         {
-           var order = _context.Orders.FirstOrDefault(o => o.Id.ToString() == req.TransactionId);
+            var order = _context.Orders.FirstOrDefault(o => o.Id.ToString() == req.TransactionId);
             if (order == null) return NotFound("Order not found");
             Options options = new Options()
             {
@@ -46,8 +48,8 @@ namespace productApi.Controllers
             {
                 Locale = Locale.TR.ToString(),
                 ConversationId = order.Id.ToString(),
-                Price = order.TotalPrice.ToString("F2"),
-                PaidPrice = order.TotalPrice.ToString("F2"),
+                Price = order.TotalPrice.ToString("0.00", CultureInfo.InvariantCulture),
+                PaidPrice = order.TotalPrice.ToString("0.00", CultureInfo.InvariantCulture),
                 Currency = Currency.TRY.ToString(),
                 Installment = 1,
                 PaymentChannel = PaymentChannel.WEB.ToString(),
@@ -73,9 +75,10 @@ namespace productApi.Controllers
             Buyer buyer = new Buyer();
             buyer.Id = user.Id.ToString();
             buyer.Name = user.UserName;
+            buyer.Surname = "Surname";
             buyer.GsmNumber = "";
             buyer.Email = user.Email;
-            buyer.IdentityNumber = user.Id.ToString() ?? "11111111111";
+            buyer.IdentityNumber = "11111111111";
             buyer.RegistrationAddress = user.Address;
             buyer.Ip = "85.34.78.112";
             buyer.City = "Istanbul";
@@ -109,15 +112,19 @@ namespace productApi.Controllers
 
             var basketItems = orderWithItems!.OrderItems.Select((item, index) => new BasketItem
             {
-                Id = "BI" + (index + 1),
-                Name = item.Product?.ProductName ?? "Undefined",
-                ItemType = BasketItemType.PHYSICAL.ToString(),
-                Price = (item.UnitPrice * item.Quantity).ToString("F2"),
+                Id = "BI" + (index + 1), // Her item için benzersiz ID
+                Name = item.Product?.ProductName ?? "Undefined", // Ürün adı
+                Category1 = "Default", // Ürün kategorisi (opsiyonel)
+                Category2 = "General", // İkinci kategori (opsiyonel)
+                ItemType = BasketItemType.PHYSICAL.ToString(), // Ürün tipi, PHYSICAL veya VIRTUAL
+                Price = (item.UnitPrice * item.Quantity).ToString("F2", System.Globalization.CultureInfo.InvariantCulture)
+
             }).ToList();
+            request.BasketItems = basketItems;
 
-
-            Payment payment = await Payment.Create(request, options);
+            // Payment payment = await Payment.Create(request, options); 3d siz ödeme başlatıyor
             ThreedsInitialize threedsInitialize = await ThreedsInitialize.Create(request, options);
+            Console.WriteLine(JsonConvert.SerializeObject(threedsInitialize, Formatting.Indented));
             return Ok(new { Content = threedsInitialize.HtmlContent, ConversationId = request.ConversationId });
         }
         [HttpPost("pay-callback")]

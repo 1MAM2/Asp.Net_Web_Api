@@ -65,6 +65,23 @@
           "Microsoft.AspNetCore.App"
         ]
       },
+      "Microsoft.AspNetCore.WebUtilities/8.0.19": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Net.Http.Headers": "8.0.19",
+          "System.IO.Pipelines": "8.0.0"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.AspNetCore.WebUtilities.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.AspNetCore.WebUtilities.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.Bcl.AsyncInterfaces/7.0.0": {
         "type": "package",
         "compile": {
@@ -806,6 +823,22 @@
           }
         }
       },
+      "Microsoft.Net.Http.Headers/8.0.19": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "8.0.0"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.Net.Http.Headers.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Net.Http.Headers.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.OpenApi/1.4.3": {
         "type": "package",
         "compile": {
@@ -877,6 +910,23 @@
         },
         "runtime": {
           "lib/net8.0/Pomelo.EntityFrameworkCore.MySql.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Resend/0.1.6": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.WebUtilities": "8.0.19",
+          "Microsoft.Extensions.Options": "8.0.0"
+        },
+        "compile": {
+          "lib/net8.0/Resend.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Resend.dll": {
             "related": ".xml"
           }
         }
@@ -1122,7 +1172,7 @@
       "System.IO.Pipelines/9.0.6": {
         "type": "package",
         "compile": {
-          "lib/net8.0/_._": {
+          "lib/net8.0/System.IO.Pipelines.dll": {
             "related": ".xml"
           }
         },
@@ -1290,6 +1340,21 @@
         "lib/net8.0/Microsoft.AspNetCore.OpenApi.xml",
         "microsoft.aspnetcore.openapi.8.0.8.nupkg.sha512",
         "microsoft.aspnetcore.openapi.nuspec"
+      ]
+    },
+    "Microsoft.AspNetCore.WebUtilities/8.0.19": {
+      "sha512": "fB3ikXAlz6yQuy029zDAS3J4qW3o6HQYL+kqsTjhiog1JwgpfkRTELCTGxMv7fL6VljFtfNJIQ/2684soCuI9A==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.webutilities/8.0.19",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net8.0/Microsoft.AspNetCore.WebUtilities.dll",
+        "lib/net8.0/Microsoft.AspNetCore.WebUtilities.xml",
+        "microsoft.aspnetcore.webutilities.8.0.19.nupkg.sha512",
+        "microsoft.aspnetcore.webutilities.nuspec"
       ]
     },
     "Microsoft.Bcl.AsyncInterfaces/7.0.0": {
@@ -3094,6 +3159,21 @@
         "microsoft.identitymodel.tokens.nuspec"
       ]
     },
+    "Microsoft.Net.Http.Headers/8.0.19": {
+      "sha512": "f2hSRVq5rR97YlfGcScVMXJvQpNpbbpnZjwsZ4kmN5/T3xk9DBVt1SPZDJIPrp/sSfdjz8aQtD8jKLXHyoHVng==",
+      "type": "package",
+      "path": "microsoft.net.http.headers/8.0.19",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net8.0/Microsoft.Net.Http.Headers.dll",
+        "lib/net8.0/Microsoft.Net.Http.Headers.xml",
+        "microsoft.net.http.headers.8.0.19.nupkg.sha512",
+        "microsoft.net.http.headers.nuspec"
+      ]
+    },
     "Microsoft.OpenApi/1.4.3": {
       "sha512": "rURwggB+QZYcSVbDr7HSdhw/FELvMlriW10OeOzjPT7pstefMo7IThhtNtDudxbXhW+lj0NfX72Ka5EDsG8x6w==",
       "type": "package",
@@ -3197,6 +3277,21 @@
         "lib/net8.0/Pomelo.EntityFrameworkCore.MySql.xml",
         "pomelo.entityframeworkcore.mysql.9.0.0.nupkg.sha512",
         "pomelo.entityframeworkcore.mysql.nuspec"
+      ]
+    },
+    "Resend/0.1.6": {
+      "sha512": "jV/VViNS3vUvkMMN5pT8+KzOErs4S4/3DG0uc3QgbH4InDOsgHEuU0Izep/IrIC2SLfBgHD/H5Lkt75lofFVnA==",
+      "type": "package",
+      "path": "resend/0.1.6",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon.png",
+        "lib/net8.0/Resend.dll",
+        "lib/net8.0/Resend.xml",
+        "resend.0.1.6.nupkg.sha512",
+        "resend.nuspec"
       ]
     },
     "Swashbuckle.AspNetCore/6.4.0": {
@@ -3762,6 +3857,7 @@
       "Microsoft.EntityFrameworkCore.Tools >= 9.0.6",
       "Microsoft.IdentityModel.Tokens >= 8.14.0",
       "Pomelo.EntityFrameworkCore.MySql >= 9.0.0",
+      "Resend >= 0.1.6",
       "Swashbuckle.AspNetCore >= 6.4.0",
       "System.IdentityModel.Tokens.Jwt >= 8.14.0"
     ]
@@ -3841,6 +3937,10 @@
           "Pomelo.EntityFrameworkCore.MySql": {
             "target": "Package",
             "version": "[9.0.0, )"
+          },
+          "Resend": {
+            "target": "Package",
+            "version": "[0.1.6, )"
           },
           "Swashbuckle.AspNetCore": {
             "target": "Package",

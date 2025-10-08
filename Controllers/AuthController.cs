@@ -16,6 +16,11 @@ using productApi.Context;
 using productApi.DTOS.UserDTOs;
 using productApi.Models;
 using Microsoft.AspNetCore.Authorization;
+using Resend;
+using System.Net.Http;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 
 namespace productApi.Controllers
 {
@@ -83,6 +88,51 @@ namespace productApi.Controllers
 
             return Ok(new { newUser.UserName });
         }
+
+        public async Task SendVeryMailAsync(User user)
+        {
+            IResend resend = ResendClient.Create("re_3gKy9BkJ_Defxc4aNFVKeuGiCBh4A2SNF");
+            var token = user.EmailConfirmationToken;
+            var encodedToken = Uri.EscapeDataString(token!);
+            string verifyUrl = $"https://e-shop-roan-eight.vercel.app/verify-email?token={encodedToken}";
+
+            var resp = await resend.EmailSendAsync(new EmailMessage()
+            {
+                From = "",
+                To = user.Email,
+                Subject = "MailConfirm",
+                HtmlBody = $@"
+            <h2>Hoş geldin {user.UserName}!</h2>
+            <p>Hesabını doğrulamak için aşağıdaki linke tıkla 👇</p>
+            <a href='{verifyUrl}'
+               style='background:#4CAF50;color:white;padding:10px 20px;border-radius:5px;text-decoration:none;'>
+               E-postamı Doğrula
+            </a>",
+            });
+        }
+
+        [HttpGet("verify-emailtoken={token}")]
+        public async Task<ActionResult> ConfirmMail(string token)
+        {
+            if (string.IsNullOrEmpty(token))
+                return BadRequest("Token bulunamadı.");
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.EmailConfirmationToken == token);
+
+            if (user == null) return NotFound("Geçersiz veya süresi dolmuş token.");
+
+            if (user.IsEmailConfirmed) return Ok("E-posta zaten doğrulanmış.");
+
+            user.IsEmailConfirmed = true;
+            user.EmailConfirmationToken = null; // Token'ı sıfırlıyoruz
+            await _context.SaveChangesAsync();
+
+            // Burada kullanıcıyı frontend'e yönlendirebilirsin
+            // örneğin doğrulama başarılı sayfasına:
+            return Redirect("https://e-shop-roan-eight.vercel.app/email-verified-success");
+        }
+
+
         [HttpPost("login")]
         public async Task<ActionResult<TokenResponseDTO>> LoginAsync(UserDTO request)
         {
