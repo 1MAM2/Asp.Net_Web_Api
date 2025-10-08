@@ -89,8 +89,8 @@ namespace productApi.Controllers
             });
         }
 
-        [HttpGet("verify-emailtoken={token}")]
-        public async Task<ActionResult> ConfirmMail(string token)
+        [HttpGet("verify-email/{token}")]
+        public async Task<ActionResult> ConfirmMail([FromRoute] string token)
         {
             if (string.IsNullOrEmpty(token))
                 return BadRequest("Token bulunamadı.");
