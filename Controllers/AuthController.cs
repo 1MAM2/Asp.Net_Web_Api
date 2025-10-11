@@ -160,6 +160,7 @@ namespace productApi.Controllers
             return Ok("Logout succes");
         }
         [HttpPost("refresh-token")]
+        [Authorize(Roles = "Customer,Admin")]
         public async Task<ActionResult<TokenResponseDTO>> RefreshTokenAsync(RefreshTokenRequestDTO request)
         {
             if (string.IsNullOrEmpty(request.refreshtoken))
@@ -167,8 +168,10 @@ namespace productApi.Controllers
                 return Unauthorized("Invalid refresh token");
             }
 
+            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
-            var user = await ValidateRefreshTokenAsync(request.UserId, request.refreshtoken);
+            var userId = int.Parse(userIdStr);
+            var user = await ValidateRefreshTokenAsync(userId, request.refreshtoken);
             if (user == null)
             {
                 return Unauthorized("Invalid or expired refresh token");
