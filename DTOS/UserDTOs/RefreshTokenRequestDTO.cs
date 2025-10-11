@@ -7,6 +7,6 @@ namespace productApi.DTOS.UserDTOs
 {
     public class RefreshTokenRequestDTO
     {
-        public required string refreshtoken { get; set; }
+        public required string refreshToken { get; set; }
     }
 }

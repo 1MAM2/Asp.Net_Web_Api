@@ -163,7 +163,7 @@ namespace productApi.Controllers
         [Authorize(Roles = "Customer,Admin")]
         public async Task<ActionResult<TokenResponseDTO>> RefreshTokenAsync(RefreshTokenRequestDTO request)
         {
-            if (string.IsNullOrEmpty(request.refreshtoken))
+            if (string.IsNullOrEmpty(request.refreshToken))
             {
                 return Unauthorized("Invalid refresh token");
             }
@@ -171,7 +171,7 @@ namespace productApi.Controllers
             var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
             var userId = int.Parse(userIdStr);
-            var user = await ValidateRefreshTokenAsync(userId, request.refreshtoken);
+            var user = await ValidateRefreshTokenAsync(userId, request.refreshToken);
             if (user == null)
             {
                 return Unauthorized("Invalid or expired refresh token");
