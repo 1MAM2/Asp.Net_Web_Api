@@ -21,6 +21,7 @@ using System.Net.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net;
+using System.Security.Principal;
 
 
 namespace productApi.Controllers
@@ -160,7 +161,7 @@ namespace productApi.Controllers
             return Ok("Logout succes");
         }
         [HttpPost("refresh-token")]
-        [Authorize(Roles = "Customer,Admin")]
+        [AllowAnonymous]
         public async Task<ActionResult<TokenResponseDTO>> RefreshTokenAsync(RefreshTokenRequestDTO request)
         {
             if (string.IsNullOrEmpty(request.refreshToken))
@@ -168,10 +169,15 @@ namespace productApi.Controllers
                 return Unauthorized("Invalid refresh token");
             }
 
-            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            // var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
-            var userId = int.Parse(userIdStr);
-            var user = await ValidateRefreshTokenAsync(userId, request.refreshToken);
+            // var userId = int.Parse(userIdStr);
+            var userFromDb = await _context.Users.FirstOrDefaultAsync(token => token.RefreshToken == request.refreshToken);
+            if (userFromDb == null)
+            {
+                return Unauthorized("Invalid or expired refresh token");
+            }
+            var user = await ValidateRefreshTokenAsync(userFromDb.Id, request.refreshToken);
             if (user == null)
             {
                 return Unauthorized("Invalid or expired refresh token");
