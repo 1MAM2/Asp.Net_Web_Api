@@ -145,7 +145,7 @@ namespace productApi.Controllers
             return response;
         }
         [HttpPost("logout")]
-        [Authorize(Roles = "Customer")]
+        [Authorize(Roles = "Customer,Admin")]
         public async Task<IActionResult> LogoutAsync()
         {
             var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;

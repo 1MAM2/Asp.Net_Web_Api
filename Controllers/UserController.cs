@@ -14,7 +14,7 @@ using productApi.Models;
 namespace productApi.Controllers
 {
     [ApiController]
-    [Authorize(Roles = "Customer")]
+    [Authorize(Roles = "Customer,Admin")]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
@@ -26,6 +26,7 @@ namespace productApi.Controllers
 
 
         [HttpGet("me")]
+        
         public async Task<ActionResult<UserReadDTO>> OneUserAllData()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
