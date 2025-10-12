@@ -10,7 +10,7 @@ using productApi.Context;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Customer")]
+[Authorize(Roles = "Customer,Admin")]
 public class OrderController : ControllerBase
 {
     private readonly productDb _context;
