@@ -37,6 +37,8 @@ public class OrderController : ControllerBase
                 Quantity = oi.Quantity,
                 UnitPrice = oi.UnitPrice,
                 TotalPrice = oi.TotalPrice,
+                ImgUrl = oi.ImgUrl,
+                ProductName = oi.ProductName
             }).ToList(),
             Status = order.Status,
         });
@@ -67,7 +69,9 @@ public class OrderController : ControllerBase
                     ProductId = oi.ProductId,
                     Quantity = oi.Quantity,
                     UnitPrice = oi.UnitPrice,
-                    TotalPrice = oi.Quantity * oi.UnitPrice
+                    TotalPrice = oi.Quantity * oi.UnitPrice,
+                    ImgUrl = oi.ImgUrl,
+                    ProductName = oi.ProductName
                 }).ToList(),
             }).ToList();
             return Ok(sendOrderReadDTOs);
@@ -94,7 +98,9 @@ public class OrderController : ControllerBase
             {
                 ProductId = oi.ProductId,
                 Quantity = oi.Quantity,
-                UnitPrice = oi.UnitPrice
+                UnitPrice = oi.UnitPrice,
+                ImgUrl = oi.ImgUrl,
+                ProductName = oi.ProductName
             }).ToList()
         };
 
@@ -112,7 +118,9 @@ public class OrderController : ControllerBase
                 ProductId = oi.ProductId,
                 Quantity = oi.Quantity,
                 UnitPrice = oi.UnitPrice,
-                TotalPrice = oi.Quantity * oi.UnitPrice
+                TotalPrice = oi.Quantity * oi.UnitPrice,
+                ImgUrl = oi.ImgUrl,
+                ProductName = oi.ProductName
             }).ToList()
         };
 
@@ -145,8 +153,8 @@ public class OrderController : ControllerBase
             OrderItems = order.OrderItems.Select(oi => new OrderItemReadDTO
             {
                 ProductId = oi.ProductId,
-                ProductName = oi.Product.ProductName,
-                ImageUrl = oi.Product.ImgUrl,
+                ProductName = oi.Product!.ProductName,
+                ImgUrl = oi.Product.ImgUrl,
                 Quantity = oi.Quantity,
                 UnitPrice = oi.UnitPrice,
                 TotalPrice = oi.TotalPrice
