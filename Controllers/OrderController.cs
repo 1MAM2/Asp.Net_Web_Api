@@ -131,7 +131,7 @@ public class OrderController : ControllerBase
     {
         var order = await _context.Orders
             .Include(o => o.OrderItems)
-            .Include(o=>o.Product)
+            .ThenInclude(oi => oi.Product)
             .FirstOrDefaultAsync(o => o.Id == id);
 
         if (order == null) return NotFound();
