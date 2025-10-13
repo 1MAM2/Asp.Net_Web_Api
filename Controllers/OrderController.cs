@@ -131,6 +131,7 @@ public class OrderController : ControllerBase
     {
         var order = await _context.Orders
             .Include(o => o.OrderItems)
+            .Include(o=>o.Product)
             .FirstOrDefaultAsync(o => o.Id == id);
 
         if (order == null) return NotFound();
@@ -144,10 +145,12 @@ public class OrderController : ControllerBase
             OrderItems = order.OrderItems.Select(oi => new OrderItemReadDTO
             {
                 ProductId = oi.ProductId,
+                ProductName = oi.Product.ProductName,
+                ImageUrl = oi.Product.ImgUrl,
                 Quantity = oi.Quantity,
                 UnitPrice = oi.UnitPrice,
-                TotalPrice = oi.Quantity * oi.UnitPrice
-            }).ToList()
+                TotalPrice = oi.TotalPrice
+            }).ToList(),
         };
 
         return Ok(orderReadDTO);
