@@ -19,6 +19,31 @@ public class OrderController : ControllerBase
     {
         _context = context;
     }
+    [HttpGet]
+    public async Task<ActionResult<List<OrderReadDTO>>> GetAllOrders()
+    {
+        var orders = await _context.Orders
+        .Include(i => i.OrderItems)
+        .ToListAsync();
+        var ordersDto = orders.Select(order => new OrderReadDTO
+        {
+            OrderId = order.Id,
+            UserId = order.UserId,
+            CreatedAt = order.CreatedAt,
+            TotalPrice = order.TotalPrice,
+            OrderItems = order.OrderItems.Select(oi => new OrderItemReadDTO
+            {
+                ProductId = oi.ProductId,
+                Quantity = oi.Quantity,
+                UnitPrice = oi.UnitPrice,
+                TotalPrice = oi.TotalPrice,
+            }).ToList(),
+            Status = order.Status,
+        });
+
+        return Ok(value: ordersDto);
+    }
+
     [HttpGet("user-getall-orders")]
     public async Task<ActionResult<List<OrderReadDTO>>> GetOrderAsync()
     {
@@ -36,7 +61,7 @@ public class OrderController : ControllerBase
                 UserId = o.UserId,
                 CreatedAt = o.CreatedAt,
                 TotalPrice = o.TotalPrice,
-                Status = o.Status.ToString(),
+                Status = o.Status,
                 OrderItems = o.OrderItems.Select(oi => new OrderItemReadDTO
                 {
                     ProductId = oi.ProductId,
@@ -76,13 +101,12 @@ public class OrderController : ControllerBase
         _context.Orders.Add(order);
         await _context.SaveChangesAsync();
 
-        // DTO ile geri döndür
         var orderReadDTO = new OrderReadDTO
         {
             UserId = order.UserId,
             CreatedAt = order.CreatedAt,
             TotalPrice = order.TotalPrice,
-            Status = order.Status.ToString(),
+            Status = order.Status,
             OrderItems = order.OrderItems.Select(oi => new OrderItemReadDTO
             {
                 ProductId = oi.ProductId,
@@ -116,7 +140,7 @@ public class OrderController : ControllerBase
             UserId = order.UserId,
             CreatedAt = order.CreatedAt,
             TotalPrice = order.TotalPrice,
-            Status = order.Status.ToString(),
+            Status = order.Status,
             OrderItems = order.OrderItems.Select(oi => new OrderItemReadDTO
             {
                 ProductId = oi.ProductId,
