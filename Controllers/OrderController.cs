@@ -173,6 +173,7 @@ public class OrderController : ControllerBase
             return BadRequest("Invalid status value");
 
         order.Status = newStatus;
+        order.CreatedAt = DateTime.Now;
         await _context.SaveChangesAsync();
 
         return NoContent();
