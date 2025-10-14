@@ -23,10 +23,22 @@ namespace productApi.Controllers
         {
             _context = context;
         }
+        [HttpGet()]
+        public async Task<ActionResult<UserReadDTO>> GetAllUsers()
+        {
+            var users = await _context.Users.ToListAsync();
 
+            var userDTO = users.Select(user => new UserReadDTO
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Address = user.Address,
+                Email = user.Email,
+            }).ToList();
+            return Ok(userDTO);
+        }
 
         [HttpGet("me")]
-        
         public async Task<ActionResult<UserReadDTO>> OneUserAllData()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
