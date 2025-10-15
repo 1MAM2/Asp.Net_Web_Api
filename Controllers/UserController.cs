@@ -99,11 +99,11 @@ namespace productApi.Controllers
             return Ok("User update success");
         }
         [HttpPut("change-role")]
-        public async Task<IActionResult> ChangeUserRole(int id, string role)
+        public async Task<IActionResult> ChangeUserRole([FromBody] ChangeRoleDTO request)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.Users.FindAsync(request.Id);
             if (user == null) return NotFound("User not found");
-            user.Role = role;
+            user.Role = request.Role!;
             await _context.SaveChangesAsync();
             return Ok("Role changed");
         }
