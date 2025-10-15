@@ -10,4 +10,5 @@ public class ProductReadDTO
     public int CategoryId { get; set; }
     public string? CategoryName { get; set; }
     public List<string?> GalleryImages { get; set; } = new();
+    public int Stock { get; set; }
 }

@@ -35,6 +35,7 @@ namespace productApi.Controllers
                 Description = p.Description,
                 CategoryId = p.CategoryId,
                 GalleryImages = p.GalleryImages.Select(productImages => productImages.ImageUrl).ToList(),
+                Stock = p.Stock,
 
             });
             return Ok(productDto);
@@ -60,6 +61,7 @@ namespace productApi.Controllers
                 Description = product.Description,
                 CategoryId = product.CategoryId,
                 GalleryImages = product.GalleryImages.Select(productImages => productImages.ImageUrl).ToList(),
+                Stock = product.Stock,
 
             };
             return Ok(productReadDTO);
@@ -79,6 +81,7 @@ namespace productApi.Controllers
                 {
                     ImageUrl = url,
                 }).ToList(),
+                Stock = dto.Stock,
             };
 
 
@@ -125,6 +128,9 @@ namespace productApi.Controllers
             product.Discount = dto.Discount;
 
             product.Description = dto.Description;
+
+            product.Stock = dto.Stock;
+
             if (dto.GalleryImages != null && dto.GalleryImages.Any())
             {
                 _context.ProductImages.RemoveRange(product.GalleryImages);
@@ -154,6 +160,18 @@ namespace productApi.Controllers
                                       // _context.Products.Remove(product);
             await _context.SaveChangesAsync();
             return NoContent();
+        }
+        [HttpPut("{id}/stock")]
+        public async Task<IActionResult> UpdateStock(int id, [FromBody] int newStock)
+        {
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
+                return NotFound("Product not found");
+
+            product.Stock = newStock;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Stock updated successfully", product });
         }
     }
 }
