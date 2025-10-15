@@ -98,5 +98,14 @@ namespace productApi.Controllers
             await _context.SaveChangesAsync();
             return Ok("User update success");
         }
+        [HttpPut("change-role")]
+        public async Task<IActionResult> ChangeUserRole(int id, string role)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return NotFound("User not found");
+            user.Role = role;
+            await _context.SaveChangesAsync();
+            return Ok("Role changed");
+        }
     }
 }
