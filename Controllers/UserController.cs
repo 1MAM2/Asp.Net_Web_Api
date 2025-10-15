@@ -27,7 +27,7 @@ namespace productApi.Controllers
         public async Task<ActionResult<UserReadDTO>> GetAllUsers()
         {
             var users = await _context.Users
-            .Where(u=>u.IsDeleted == false)
+            .Where(u => u.IsDeleted == false)
             .ToListAsync();
 
             var userDTO = users.Select(user => new UserReadDTO
@@ -79,6 +79,18 @@ namespace productApi.Controllers
             user.IsDeleted = true;
             await _context.SaveChangesAsync();
             return Ok();
+        }
+        [HttpPut("soft-delete/{id}")]
+        public async Task<IActionResult> SoftDeleteUser(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+                return NotFound("User not found");
+
+            user.IsDeleted = true;
+            await _context.SaveChangesAsync();
+
+            return Ok("User soft deleted");
         }
         [HttpPut("updateuser")]
         public async Task<ActionResult> UpdateAsyncUser(UserUpdateDTO req)
