@@ -70,11 +70,17 @@ namespace productApi.Controllers
             // Ürün verileri
             // -----------------------
             var topProducts = await _context.OrderItems
-                .GroupBy(oi => oi.ProductId)
-                .Select(g => new { ProductId = g.Key, Quantity = g.Sum(oi => oi.Quantity) })
-                .OrderByDescending(x => x.Quantity)
-                .Take(5)
-                .ToListAsync();
+     .Include(oi => oi.Product)
+     .GroupBy(oi => new { oi.ProductId, oi.Product!.ProductName })
+     .Select(g => new
+     {
+         ProductId = g.Key.ProductId,
+         ProductName = g.Key.ProductName,
+         Quantity = g.Sum(oi => oi.Quantity)
+     })
+     .OrderByDescending(x => x.Quantity)
+     .Take(5)
+     .ToListAsync();
 
             // -----------------------
             // Dashboard yanıtı
