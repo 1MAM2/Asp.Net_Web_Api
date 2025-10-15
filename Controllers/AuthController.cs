@@ -59,6 +59,7 @@ namespace productApi.Controllers
             newUser.Address = request.Address;
             newUser.Email = request.Email;
             newUser.EmailConfirmationToken = Guid.NewGuid().ToString();
+            newUser.PhoneNumber = request.PhoneNumber;
 
             _context.Users.Add(newUser);
 

@@ -37,6 +37,7 @@ namespace productApi.Controllers
                 Address = user.Address,
                 Email = user.Email,
                 Role = user.Role,
+                PhoneNumber = user.PhoneNumber,
             }).ToList();
             return Ok(userDTO);
         }

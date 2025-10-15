@@ -13,6 +13,8 @@ namespace productApi.Models
         public string Role { get; set; } = "Customer";
         public string Email { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
+        // yerelleştirme
+        public string? PhoneNumber { get; set; }
         public bool IsDeleted { get; set; } = false;
         public bool IsEmailConfirmed { get; set; } = false;
         public string? EmailConfirmationToken { get; set; }

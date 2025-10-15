@@ -8,4 +8,5 @@ public class UserRegisterDTO
     public string Role { get; set; } = "Customer";
     public string Email { get; set; } = string.Empty;
     public string Address { get; set; } = string.Empty;
+    public string? PhoneNumber { get; set; }
 }

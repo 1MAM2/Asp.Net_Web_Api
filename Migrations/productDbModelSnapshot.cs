@@ -80,7 +80,6 @@ namespace productApi.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ImgUrl")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int>("OrderId")
@@ -90,7 +89,6 @@ namespace productApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ProductName")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int>("Quantity")
@@ -192,6 +190,9 @@ namespace productApi.Migrations
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PhoneNumber")
                         .HasColumnType("longtext");
 
                     b.Property<string>("RefreshToken")

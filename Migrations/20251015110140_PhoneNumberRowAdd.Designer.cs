@@ -12,8 +12,8 @@ using productApi.Context;
 namespace productApi.Migrations
 {
     [DbContext(typeof(productDb))]
-    [Migration("20251013211139_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251015110140_PhoneNumberRowAdd")]
+    partial class PhoneNumberRowAdd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -83,7 +83,6 @@ namespace productApi.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ImgUrl")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int>("OrderId")
@@ -91,6 +90,9 @@ namespace productApi.Migrations
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ProductName")
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -191,6 +193,9 @@ namespace productApi.Migrations
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PhoneNumber")
                         .HasColumnType("longtext");
 
                     b.Property<string>("RefreshToken")
