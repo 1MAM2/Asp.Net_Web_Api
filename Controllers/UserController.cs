@@ -38,6 +38,7 @@ namespace productApi.Controllers
                 Email = user.Email,
                 Role = user.Role,
                 PhoneNumber = user.PhoneNumber,
+                IsEmailConfirmed = user.IsEmailConfirmed,
             }).ToList();
             return Ok(userDTO);
         }
@@ -61,6 +62,7 @@ namespace productApi.Controllers
                     Role = user.Role,
                     Address = user.Address,
                     Email = user.Email,
+                    PhoneNumber = user.PhoneNumber
                 };
                 return Ok(sendUser);
             }

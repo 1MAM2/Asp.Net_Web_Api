@@ -15,4 +15,5 @@ public class UserReadDTO
     [Required]
     public string Role { get; set; } = "Customer";
     public string? PhoneNumber { get; set; }
+    public bool IsEmailConfirmed { get; set; }
 }
