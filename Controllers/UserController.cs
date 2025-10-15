@@ -26,7 +26,9 @@ namespace productApi.Controllers
         [HttpGet()]
         public async Task<ActionResult<UserReadDTO>> GetAllUsers()
         {
-            var users = await _context.Users.ToListAsync();
+            var users = await _context.Users
+            .Where(u=>u.IsDeleted == false)
+            .ToListAsync();
 
             var userDTO = users.Select(user => new UserReadDTO
             {
