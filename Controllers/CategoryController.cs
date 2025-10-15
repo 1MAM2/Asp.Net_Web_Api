@@ -33,7 +33,7 @@ public class CategoryController : ControllerBase
     public async Task<IActionResult> GetProductsByCategory(int catid)
     {
         var products = await _context.Products
-        .Where(p => p.CategoryId == catid)
+        .Where(p => p.CategoryId == catid && p.IsDeleted == false && p.Stock > 5) 
         .ToListAsync();
         if (products == null || products.Count == 0) return NotFound("Bu kategoriye ait ürün bulunamadı");
         return Ok(products);

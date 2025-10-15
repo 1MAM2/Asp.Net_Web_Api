@@ -19,7 +19,7 @@ namespace productApi.Controllers
         public async Task<IActionResult> GetAll()
         {
             var products = await _context.Products
-            .Where(p => !p.IsDeleted)
+            .Where(p => !p.IsDeleted && p.Stock > 5)
             .Include(c => c.Category)
             .Include(p => p.GalleryImages) // bu farklı bir tablo o yüzden include etmen gerekiyor.
             .ToListAsync(); // soft delete
@@ -44,6 +44,7 @@ namespace productApi.Controllers
         public async Task<IActionResult> GetProductById(int id)
         {
             var product = await _context.Products
+            .Where(p => p.IsDeleted == false && p.Stock > 5)
             .Include(p => p.Category)
             .Include(p => p.GalleryImages)
             .FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted);
