@@ -161,14 +161,15 @@ namespace productApi.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
+        public class UpdateStockDTO { public int NewStock { get; set; } }
         [HttpPut("{id}/stock")]
-        public async Task<IActionResult> UpdateStock(int id, [FromBody] int newStock)
+        public async Task<IActionResult> UpdateStock(int id, [FromBody] UpdateStockDTO dto)
         {
             var product = await _context.Products.FindAsync(id);
             if (product == null)
                 return NotFound("Product not found");
 
-            product.Stock = newStock;
+            product.Stock = dto.NewStock;
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "Stock updated successfully", product });
