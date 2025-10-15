@@ -81,7 +81,10 @@ namespace productApi.Controllers
      .OrderByDescending(x => x.Quantity)
      .Take(5)
      .ToListAsync();
-
+            var lowStockProducts = await _context.Products
+                .Where(p => p.Stock < 5)
+                .Select(p => new { p.ProductName, p.Stock })
+                .ToListAsync();
             // -----------------------
             // Dashboard yanıtı
             // -----------------------
@@ -108,7 +111,8 @@ namespace productApi.Controllers
                     totalRevenue,
                     monthlyRevenue
                 },
-                topProducts
+                topProducts,
+                lowStockProducts,
             };
 
             return Ok(dashboardData);

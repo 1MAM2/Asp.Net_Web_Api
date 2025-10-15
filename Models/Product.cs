@@ -13,6 +13,7 @@ public class Product
     public ICollection<ProductImage> GalleryImages { get; set; } = new List<ProductImage>();
     public bool IsDeleted { get; set; }
     public Category? Category { get; set; }
+    public int Stock { get; set; } = 0; 
 
     [NotMapped]
     public decimal FinalPrice => Price * (1 - Discount);

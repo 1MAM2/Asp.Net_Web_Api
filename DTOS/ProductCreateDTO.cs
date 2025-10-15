@@ -8,4 +8,5 @@ public class ProductCreateDTO
     public decimal Discount { get; set; }
     // public decimal FinalPrice => Price * (1 - Discount);
     public List<string> GalleryImages { get; set; } = new();
+    public int Stock { get; set; }
 }

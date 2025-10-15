@@ -103,6 +103,17 @@ public class OrderController : ControllerBase
                 ProductName = oi.ProductName
             }).ToList()
         };
+        foreach (var item in order.OrderItems)
+        {
+            var product = await _context.Products.FindAsync(item.ProductId);
+            if (product == null)
+                return BadRequest($"Product with ID {item.ProductId} not found.");
+
+            if (product.Stock < item.Quantity)
+                return BadRequest($"Not enough stock for product: {product.ProductName}");
+
+            product.Stock -= item.Quantity; // stok düş
+        }
 
         _context.Orders.Add(order);
         await _context.SaveChangesAsync();

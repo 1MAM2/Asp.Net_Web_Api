@@ -7,4 +7,5 @@ public class ProductUpdateDTO
     public decimal Discount { get; set; }
     public int CategoryId { get; set; }
     public List<string> GalleryImages { get; set; } = new();
+    public int Stock { get; set; }
 }
