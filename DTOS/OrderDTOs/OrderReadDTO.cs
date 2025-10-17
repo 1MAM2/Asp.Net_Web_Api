@@ -2,7 +2,7 @@ using static Order;
 
 public class OrderReadDTO
 {
-    public int OrderId { get; set; }
+    public int Id { get; set; }
     public int UserId { get; set; }
     public DateTime CreatedAt { get; set; }
     public decimal TotalPrice { get; set; }

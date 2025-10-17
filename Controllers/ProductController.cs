@@ -1,8 +1,8 @@
-
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using productApi.Context;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace productApi.Controllers
 {
@@ -11,18 +11,21 @@ namespace productApi.Controllers
     public class ProductController : ControllerBase
     {
         private readonly productDb _context;
+
         public ProductController(productDb context)
         {
             _context = context;
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var products = await _context.Products
-            .Where(p => !p.IsDeleted && p.Stock > 5)
-            .Include(c => c.Category)
-            .Include(p => p.GalleryImages) // bu farklı bir tablo o yüzden include etmen gerekiyor.
-            .ToListAsync(); // soft delete
+                .Where(p => !p.IsDeleted && p.Stock > 5)
+                .Include(p => p.Category)
+                .Include(p => p.GalleryImages)
+                .ToListAsync();
+
             var productDto = products.Select(p => new ProductReadDTO
             {
                 Id = p.Id,
@@ -34,22 +37,24 @@ namespace productApi.Controllers
                 FinalPrice = p.Price * (1 - p.Discount),
                 Description = p.Description,
                 CategoryId = p.CategoryId,
-                GalleryImages = p.GalleryImages.Select(productImages => productImages.ImageUrl).ToList(),
+                GalleryImages = p.GalleryImages?.Select(img => img.ImageUrl).ToList() ?? new List<string>()!,
                 Stock = p.Stock,
-
             });
+
             return Ok(productDto);
         }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductById(int id)
         {
             var product = await _context.Products
-            .Where(p => p.IsDeleted == false && p.Stock > 5)
-            .Include(p => p.Category)
-            .Include(p => p.GalleryImages)
-            .FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted);
+                .Where(p => !p.IsDeleted && p.Stock > 5 && p.Id == id)
+                .Include(p => p.Category)
+                .Include(p => p.GalleryImages)
+                .FirstOrDefaultAsync();
 
             if (product == null) return NotFound();
+
             var productReadDTO = new ProductReadDTO
             {
                 Id = product.Id,
@@ -61,12 +66,13 @@ namespace productApi.Controllers
                 CategoryName = product.Category?.CategoryName,
                 Description = product.Description,
                 CategoryId = product.CategoryId,
-                GalleryImages = product.GalleryImages.Select(productImages => productImages.ImageUrl).ToList(),
+                GalleryImages = product.GalleryImages?.Select(img => img.ImageUrl).ToList() ?? new List<string>()!,
                 Stock = product.Stock,
-
             };
+
             return Ok(productReadDTO);
         }
+
         [HttpPost]
         public async Task<IActionResult> CreateProduct(ProductCreateDTO dto)
         {
@@ -76,20 +82,13 @@ namespace productApi.Controllers
                 Price = dto.Price,
                 ImgUrl = dto.ImgUrl,
                 CategoryId = dto.CategoryId,
-                Discount = dto.Discount / 100,
+                Discount = dto.Discount / 100, // Discount dokunulmadı
                 Description = dto.Description,
-                GalleryImages = dto.GalleryImages.Select(url => new ProductImage
-                {
-                    ImageUrl = url,
-                }).ToList(),
+                GalleryImages = dto.GalleryImages?.Select(url => new ProductImage { ImageUrl = url }).ToList() ?? new List<ProductImage>(),
                 Stock = dto.Stock,
             };
 
-
-
             _context.Products.Add(product);
-
-
             await _context.SaveChangesAsync();
 
             var category = await _context.Categories.FindAsync(dto.CategoryId);
@@ -103,16 +102,18 @@ namespace productApi.Controllers
                 FinalPrice = product.Price * (1 - product.Discount),
                 ImgUrl = product.ImgUrl,
                 CategoryName = category?.CategoryName,
-                GalleryImages = product.GalleryImages.Select(img => img.ImageUrl).ToList(),
+                GalleryImages = product.GalleryImages?.Select(img => img.ImageUrl).ToList() ?? new List<string>()!,
             };
+
             return CreatedAtAction(nameof(GetProductById), new { id = productReadDto.Id }, productReadDto);
         }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduct(int id, ProductUpdateDTO dto)
         {
             var product = await _context.Products
-            .Include(p => p.GalleryImages)
-            .FirstOrDefaultAsync(p => p.Id == id);
+                .Include(p => p.GalleryImages)
+                .FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null) return NotFound("Ürün bulunamadı");
 
@@ -123,52 +124,44 @@ namespace productApi.Controllers
                 product.ImgUrl = dto.ImgUrl;
 
             product.Price = dto.Price;
-
             product.CategoryId = dto.CategoryId;
-
-            product.Discount = dto.Discount;
-
+            product.Discount = dto.Discount; // Discount dokunulmadı
             product.Description = dto.Description;
-
             product.Stock = dto.Stock;
 
             if (dto.GalleryImages != null && dto.GalleryImages.Any())
             {
                 _context.ProductImages.RemoveRange(product.GalleryImages);
-
-                product.GalleryImages = dto.GalleryImages.Select(imgUrls => new ProductImage
-                {
-                    ImageUrl = imgUrls,
-                    ProductId = product.Id
-                }).ToList();
+                product.GalleryImages = dto.GalleryImages.Select(url => new ProductImage { ImageUrl = url, ProductId = product.Id }).ToList();
             }
-
-
 
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var product = await _context.Products.FindAsync(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
+            if (product == null) return NotFound();
+
             product.IsDeleted = true; // soft delete
-                                      // _context.Products.Remove(product);
             await _context.SaveChangesAsync();
+
             return NoContent();
         }
-        public class UpdateStockDTO { public int NewStock { get; set; } }
+
+        public class UpdateStockDTO
+        {
+            public int NewStock { get; set; }
+        }
+
         [HttpPut("{id}/stock")]
         public async Task<IActionResult> UpdateStock(int id, [FromBody] UpdateStockDTO dto)
         {
             var product = await _context.Products.FindAsync(id);
-            if (product == null)
-                return NotFound("Product not found");
+            if (product == null) return NotFound("Product not found");
 
             product.Stock = dto.NewStock;
             await _context.SaveChangesAsync();

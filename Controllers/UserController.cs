@@ -5,7 +5,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using productApi.Context;
 using productApi.DTOS.UserDTOs;
@@ -19,70 +18,75 @@ namespace productApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly productDb _context;
+
         public UserController(productDb context)
         {
             _context = context;
         }
-        [HttpGet()]
-        public async Task<ActionResult<UserReadDTO>> GetAllUsers()
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<UserReadDTO>>> GetAllUsers()
         {
             var users = await _context.Users
-            .Where(u => u.IsDeleted == false)
-            .ToListAsync();
+                .Where(u => !u.IsDeleted)
+                .ToListAsync();
 
-            var userDTO = users.Select(user => new UserReadDTO
+            var userDTOs = users.Select(u => new UserReadDTO
             {
-                Id = user.Id,
-                UserName = user.UserName,
-                Address = user.Address,
-                Email = user.Email,
-                Role = user.Role,
-                PhoneNumber = user.PhoneNumber,
-                IsEmailConfirmed = user.IsEmailConfirmed,
+                Id = u.Id,
+                UserName = u.UserName,
+                Address = u.Address,
+                Email = u.Email,
+                Role = u.Role,
+                PhoneNumber = u.PhoneNumber,
+                IsEmailConfirmed = u.IsEmailConfirmed
             }).ToList();
-            return Ok(userDTO);
+
+            return Ok(userDTOs);
         }
 
         [HttpGet("me")]
-        public async Task<ActionResult<UserReadDTO>> OneUserAllData()
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId != null)
-            {
-
-                var id = int.Parse(userId);
-                var user = await _context.Users.FindAsync(id);
-                if (user == null)
-                {
-                    return NotFound("User not found pls try again later");
-                }
-                var sendUser = new User()
-                {
-                    UserName = user.UserName,
-                    Role = user.Role,
-                    Address = user.Address,
-                    Email = user.Email,
-                    PhoneNumber = user.PhoneNumber
-                };
-                return Ok(sendUser);
-            }
-            return NotFound("User not found");
-        }
-        [HttpDelete("deleteAccount")]
-        public async Task<IActionResult> SoftDeleteAccount()
+        public async Task<ActionResult<UserReadDTO>> GetCurrentUser()
         {
             var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!int.TryParse(userIdStr, out var userId))
-            {
-                return BadRequest("Invalid user ID");
-            }
+                return NotFound("User not found");
+
             var user = await _context.Users.FindAsync(userId);
-            if (user == null) return NotFound("Account not found");
+            if (user == null)
+                return NotFound("User not found, please try again later");
+
+            var userDto = new UserReadDTO
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Role = user.Role,
+                Address = user.Address,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                IsEmailConfirmed = user.IsEmailConfirmed
+            };
+
+            return Ok(userDto);
+        }
+
+        [HttpDelete("deleteAccount")]
+        public async Task<IActionResult> SoftDeleteCurrentUser()
+        {
+            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!int.TryParse(userIdStr, out var userId))
+                return BadRequest("Invalid user ID");
+
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+                return NotFound("Account not found");
 
             user.IsDeleted = true;
             await _context.SaveChangesAsync();
-            return Ok();
+
+            return Ok("Account soft deleted successfully");
         }
+
         [HttpPut("soft-delete/{id}")]
         public async Task<IActionResult> SoftDeleteUser(int id)
         {
@@ -93,36 +97,39 @@ namespace productApi.Controllers
             user.IsDeleted = true;
             await _context.SaveChangesAsync();
 
-            return Ok("User soft deleted");
+            return Ok("User soft deleted successfully");
         }
+
         [HttpPut("updateuser")]
-        public async Task<ActionResult> UpdateAsyncUser(UserUpdateDTO req)
+        public async Task<IActionResult> UpdateCurrentUser(UserUpdateDTO req)
         {
             var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!int.TryParse(userIdStr, out var userId))
-            {
                 return BadRequest("Invalid user ID");
-            }
-            var user = await _context.Users.FindAsync(userId);
-            if (user == null) return NotFound("User not found");
 
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+                return NotFound("User not found");
 
             user.UserName = req.UserName;
             user.Address = req.Address;
             user.Email = req.Email;
 
-
             await _context.SaveChangesAsync();
-            return Ok("User update success");
+            return Ok("User updated successfully");
         }
+
         [HttpPut("change-role")]
         public async Task<IActionResult> ChangeUserRole([FromBody] ChangeRoleDTO request)
         {
             var user = await _context.Users.FindAsync(request.Id);
-            if (user == null) return NotFound("User not found");
-            user.Role = request.Role!;
+            if (user == null)
+                return NotFound("User not found");
+
+            user.Role = request.Role ?? user.Role;
             await _context.SaveChangesAsync();
-            return Ok("Role changed");
+
+            return Ok("Role changed successfully");
         }
     }
 }
