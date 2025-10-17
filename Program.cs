@@ -1,20 +1,53 @@
+using DotNetEnv;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using productApi.Context;
 using productApi.Hubs;
+using productApi.SeedUser;
+using Microsoft.AspNetCore.Identity;
+using productApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//signalR
+// .env dosyasını yükle
+Env.Load();
+
+// appsettings.json ve env değişkenlerini yükle
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddEnvironmentVariables();
+
+// SignalR
 builder.Services.AddSignalR();
 
+// Logging
 builder.Services.AddLogging();
 
 // MySQL bağlantısı
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+// 📌 DbContext önce tanımlanmalı
+builder.Services.AddDbContext<productDb>(options =>
+    options.UseMySql(
+        connectionString,
+        ServerVersion.AutoDetect(connectionString)
+    )
+);
+
+// Identity
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.User.RequireUniqueEmail = true;
+})
+.AddEntityFrameworkStores<productDb>()
+.AddDefaultTokenProviders();
+
+// Controllers ve JSON ayarları
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -23,6 +56,7 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.WriteIndented = true;
     });
 
+// Swagger + JWT ayarları
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "productApi", Version = "v1" });
@@ -53,13 +87,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddDbContext<productDb>(options =>
-    options.UseMySql(
-        connectionString,
-        ServerVersion.AutoDetect(connectionString)
-    )
-);
-
+// JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>
 {
@@ -80,36 +108,33 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
-{
-    policy.WithOrigins(
-            "https://e-shop-roan-eight.vercel.app",
-            "http://localhost:5173"
-        ).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+    {
+        policy.WithOrigins(
+                "https://e-shop-roan-eight.vercel.app",
+                "http://localhost:5173"
+            ).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+    });
 });
-});
-
-// builder.Services.AddCors(options =>
-// {
-//     options.AddPolicy("AllowAll",
-//         builder =>
-//         {
-//             builder.AllowAnyOrigin()
-//                    .AllowAnyMethod()
-//                    .AllowAnyHeader();
-//         });
-// });
 
 var app = builder.Build();
 
+// Seed admin & customer
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await SeedData.InitializeAsync(services);
+}
+
+// Swagger
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+// Middleware
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
-// app.UseCors("AllowAll");
 app.Use(async (context, next) =>
 {
     try
@@ -122,8 +147,11 @@ app.Use(async (context, next) =>
         await context.Response.WriteAsync($"Server error: {ex.Message}");
     }
 });
+
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 app.MapHub<PayHub>("/pay-hub");
+
 app.Run();

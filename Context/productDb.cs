@@ -1,13 +1,18 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using productApi.Models;
 
 namespace productApi.Context
 {
 
-    public class productDb : DbContext
+    public class productDb : IdentityDbContext<IdentityUser, IdentityRole, string>
     {
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Product>().ToTable("products"); // küçük harf
             modelBuilder.Entity<Category>().ToTable("categories"); // küçük harf
             modelBuilder.Entity<ProductImage>().ToTable("productimages"); // küçük harf
